@@ -104,7 +104,7 @@
                     "metadata": {
                         "name": "${NOTEBOOK_NAME}",
                         "labels": {
-                            "app": "${NOTEBOOK_NAME}"
+                            "build": "${NOTEBOOK_NAME}"
                         }
                     },
                     "spec": {
