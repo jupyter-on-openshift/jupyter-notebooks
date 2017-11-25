@@ -39,8 +39,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/jupyter-on-openshift/minimal-notebook"
-                    },
-                    "contextDir": "minimal-notebook"
+                    }
                 },
                 "strategy": {
                     "type": "Source",
