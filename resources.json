@@ -94,7 +94,7 @@
                 {
                     "name": "CONTEXT_DIR",
                     "value": "",
-                    "required": true
+                    "required": false
                 }
             ],
             "objects": [
