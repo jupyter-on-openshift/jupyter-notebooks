@@ -1,0 +1,163 @@
+{
+    "kind": "List",
+    "apiVersion": "v1",
+    "items": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "minimal-notebook",
+                "labels": {
+                    "build": "minimal-notebook"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": true
+                }
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "minimal-notebook",
+                "labels": {
+                    "build": "minimal-notebook"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange"
+                    }
+                ],
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/jupyter-on-openshift/minimal-notebook"
+                    },
+                    "contextDir": "minimal-notebook"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "centos/python-35-centos7:latest"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "minimal-notebook:3.5"
+                    }
+                }
+            }
+        },
+        {
+            "kind": "Template",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "notebook-builder",
+                "annotations": {
+                    "openshift.io/display-name": "Jupyter Notebook Builder",
+                    "description": "Template for creating customised Jupyter Notebook images.",
+                    "iconClass": "icon-python",
+                    "tags": "python,jupyter"
+                }
+            },
+            "parameters": [
+                {
+                    "name": "NOTEBOOK_NAME",
+                    "value": "custom-notebook",
+                    "required": true
+                },
+                {
+                    "name": "BUILDER_IMAGE",
+                    "value": "minimal-notebook:3.5",
+                    "required": true
+                },
+                {
+                    "name": "GIT_REPOSITORY_URL",
+                    "value": "",
+                    "required": true
+                },
+                {
+                    "name": "GIT_REFERENCE",
+                    "value": "master",
+                    "required": true
+                },
+                {
+                    "name": "CONTEXT_DIR",
+                    "value": "",
+                    "required": true
+                }
+            ],
+            "objects": [
+                {
+                    "kind": "ImageStream",
+                    "apiVersion": "v1",
+                    "metadata": {
+                        "name": "${NOTEBOOK_NAME}",
+                        "labels": {
+                            "app": "${NOTEBOOK_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "lookupPolicy": {
+                            "local": true
+                        }
+                    }
+                },
+                {
+                    "kind": "BuildConfig",
+                    "apiVersion": "v1",
+                    "metadata": {
+                        "name": "${NOTEBOOK_NAME}",
+                        "labels": {
+                            "build": "${NOTEBOOK_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "triggers": [
+                            {
+                                "type": "ConfigChange"
+                            },
+                            {
+                                "type": "ImageChange"
+                            }
+                        ],
+                        "source": {
+                            "type": "Git",
+                            "git": {
+                                "uri": "${GIT_REPOSITORY_URL}",
+                                "ref": "${GIT_REFERENCE}"
+                            },
+                            "contextDir": "${CONTEXT_DIR}"
+                        },
+                        "strategy": {
+                            "type": "Source",
+                            "sourceStrategy": {
+                                "from": {
+                                    "kind": "DockerImage",
+                                    "name": "${BUILDER_IMAGE}"
+                                }
+                            }
+                        },
+                        "output": {
+                            "to": {
+                                "kind": "ImageStreamTag",
+                                "name": "${NOTEBOOK_NAME}:latest"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
