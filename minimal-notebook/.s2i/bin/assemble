@@ -10,6 +10,25 @@ pip install -U pip setuptools wheel
 
 pip install -r /tmp/src/requirements.txt
 
+# Activate JupyterHub extension for JupyterLab.
+
+jupyter labextension install @jupyterlab/hub-extension@^0.6.0
+
+# Create a profile for the notebook. Add code for setting password for
+# the notebook from an environment variable.
+
+jupyter notebook --generate-config
+
+cat >> $HOME/.jupyter/jupyter_notebook_config.py << EOF
+import os
+password = os.environ.get('JUPYTER_NOTEBOOK_PASSWORD')
+if password:
+    import notebook.auth
+    c.NotebookApp.password = notebook.auth.passwd(password)
+    del password
+    del os.environ['JUPYTER_NOTEBOOK_PASSWORD']
+EOF
+
 # This S2I assemble script is only used when creating the custom image.
 # For when running the image, or using it as a S2I builder, we use a second
 # set of custom S2I scripts. We now need to move these into the correct
