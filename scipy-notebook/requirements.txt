@@ -1,3 +1,5 @@
+### scipy-notebook
+
 ipywidgets==7.0.*
 pandas==0.19.*
 numexpr==2.6.*
