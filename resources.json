@@ -38,9 +38,9 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/jupyter-on-openshift/jupyter-notebooks",
-                        "contextDir": "minimal-notebook"
-                    }
+                        "uri": "https://github.com/jupyter-on-openshift/jupyter-notebooks"
+                    },
+                    "contextDir": "minimal-notebook"
                 },
                 "strategy": {
                     "type": "Source",
