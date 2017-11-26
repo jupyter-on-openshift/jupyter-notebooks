@@ -4,10 +4,6 @@ set -x
 
 set -eo pipefail
 
-if [ -f /opt/app-root/etc/generate_container_user ]; then
-    . /opt/app-root/etc/generate_container_user
-fi
-
 # Start the Jupyter notebook instance.
 
 if [ x"$JUPYTER_INTERFACE_TYPE" = x"lab" ]; then
