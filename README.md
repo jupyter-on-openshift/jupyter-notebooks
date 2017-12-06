@@ -101,6 +101,6 @@ oc new-build --image-stream minimal-notebook:3.5 \
 Using the OpenShift Web Console
 -------------------------------
 
-The notebook images can also be deployed from the web console by selecting _Deploy Image_ from the _Add to Project+ menu, and then choosing the image from _Image Stream Tag_.
+The notebook images can also be deployed from the web console by selecting _Deploy Image_ from the _Add to Project_ menu, and then choosing the image from _Image Stream Tag_.
 
 To build a custom notebook image from the web console, select _Browse Catalog_ from _Add to Project_. Enter ``jupyter`` in the search field and then select _Jupyter Notebook Builder_.
