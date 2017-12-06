@@ -79,7 +79,7 @@ oc new-build --image-stream minimal-notebook:3.5 \
   --name scipy-notebook
 ```
 
-If the build fails because the default memory limit on builds in your OpenShift cluster is too small, run:
+If a build fails because the default memory limit on builds in your OpenShift cluster is too small, run:
 
 ```
 oc patch bc/scipy-notebook \
