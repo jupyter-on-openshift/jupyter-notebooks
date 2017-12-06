@@ -13,7 +13,7 @@ Building the Minimal Notebook
 To build the minimal Jupyter notebook run the command:
 
 ```
-oc apply -f https://raw.githubusercontent.com/jupyter-on-openshift/jupyter-notebooks/master/resources.json
+oc create -f https://raw.githubusercontent.com/jupyter-on-openshift/jupyter-notebooks/master/resources.json
 ```
 
 This will create a build configuration in your OpenShift project to build the minimal Jupyter notebook image using the Python 3.5 S2I builder. You can watch the progress of the build by running:
