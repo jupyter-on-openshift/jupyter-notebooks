@@ -12,7 +12,7 @@ pip install -r /tmp/src/requirements.txt
 
 # Activate JupyterHub extension for JupyterLab.
 
-jupyter labextension install @jupyterlab/hub-extension@^0.6.0
+#jupyter labextension install @jupyterlab/hub-extension
 
 # Create a profile for the notebook. Add code for setting password for
 # the notebook from an environment variable.
