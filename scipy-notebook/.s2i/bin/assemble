@@ -6,7 +6,7 @@ set -eo pipefail
 
 # Execute original assemble script.
 
-/opt/app-root/s2i/assemble
+/opt/app-root/builder/assemble
 
 # Activate ipywidgets extension.
 
