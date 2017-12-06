@@ -24,6 +24,8 @@ oc logs --follow bc/minimal-notebook
 
 A tagged image ``minimal-notebook:3.5`` should be created in your project.
 
+The command to create the minimal Jupyter notebook image above will also load a template for creating custom notebook images. This will be used below.
+
 Deploying the Minimal Notebook
 ------------------------------
 
@@ -66,7 +68,7 @@ oc delete all --selector app=mynotebook
 Creating Custom Notebook Images
 -------------------------------
 
-To create custom notebooks images, you can use the ``minimal-notebook:3.5`` image as a S2I builder. This is preferably done using a template which was also loaded when the initial ``oc create`` command was run above.
+To create custom notebooks images, you can use the ``minimal-notebook:3.5`` image as a S2I builder. This is preferably done using a template which was also loaded when creating the initial minimal Jupyter notebook image above.
 
 Two examples of custom notebook images are included with this repository. These can be used to create custom notebook images similar to the ``scipy-notebook`` and ``tensorflow-notebook`` images provided by the Jupyter project. The examples will only include Python 3.5 support and do not include Python 2.7 support in the same image.
 
