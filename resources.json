@@ -56,6 +56,11 @@
                         "kind": "ImageStreamTag",
                         "name": "minimal-notebook:3.5"
                     }
+                },
+                "resources": {
+                    "limits": {
+                        "memory": "1Gi"
+                    }
                 }
             }
         },
