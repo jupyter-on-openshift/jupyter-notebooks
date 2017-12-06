@@ -70,19 +70,38 @@ To create custom notebooks images, you can use the ``minimal-notebook:3.5`` imag
 
 Two examples are included with this repository. These can be used to create custom notebook images similar to the ``scipy-notebook`` and ``tensorflow-notebook`` images provided by the Jupyter project. The examples will only include Python 3.5 support and do not include Python 2.7 support in the same image.
 
-To build the examples run:
+To build the ``scipy-notebook`` image, run:
 
 ```
 oc new-build --image-stream minimal-notebook:3.5 \
   --code https://github.com/jupyter-on-openshift/jupyter-notebooks \
   --context-dir scipy-notebook \
   --name scipy-notebook
+```
 
-oc new-build --image-stream minimal-notebook:3.5 \
+If the build fails because the default memory limit on builds in your OpenShift cluster is too small, run:
+
+```
+oc patch bc/scipy-notebook \
+  --patch '{"spec":{"resources":{"limits":{"memory":"1Gi"}}}}'
+```
+
+and start a new build by running:
+
+```
+oc start-build bc/scipy-notebook
+```
+
+Once the build is complete, to build the ``tensorflow-notebook`` image, run:
+
+```
+oc new-build --image-stream scipy-notebook:latest \
   --code https://github.com/jupyter-on-openshift/jupyter-notebooks \
   --context-dir tensorflow-notebook \
   --name tensorflow-notebook
 ```
+
+In the case of the ``tensorflow-notebook`` image, it is layered on top of the ``scipy-notebook`` image by using the ``scipy-notebook`` image as the S2I builder.
 
 The directory in the Git repository the S2I build is run against can contain a ``requirements.txt`` file listing the Python package to be installed in the custom notebook image. Any other files in the directory will also be copied into the image. When the notebook instance is started from the image, those files will then be present in your workspace.
 
