@@ -171,7 +171,7 @@
                 "name": "notebook-deployer",
                 "annotations": {
                     "openshift.io/display-name": "Jupyter Notebook",
-                    "description": "Template for deploying customised Jupyter Notebook images.",
+                    "description": "Template for deploying Jupyter Notebook images.",
                     "iconClass": "icon-python",
                     "tags": "python,jupyter"
                 }
