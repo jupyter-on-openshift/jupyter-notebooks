@@ -171,7 +171,7 @@
                     "sourceStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "scipy-notebook:3.5"
+                            "name": "minimal-notebook:3.5"
                         }
                     }
                 },
