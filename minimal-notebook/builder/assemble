@@ -4,4 +4,6 @@ set -x
 
 set -eo pipefail
 
+rm -f requirements.txt
+
 /usr/libexec/s2i/assemble
