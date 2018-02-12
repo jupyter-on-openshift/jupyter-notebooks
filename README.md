@@ -7,6 +7,8 @@ This includes input source code for creating a minimal Jupyter notebook image us
 
 The minimal Jupyter notebook image can be deployed to create an empty Jupyter notebook workspace in OpenShift that you can work with. The same image, can also be used as a S2I builder to create customised Jupyter notebook images with additional Python packages installed, or notebook files preloaded.
 
+*Note: The images provided by this repository were originally called ``minimal-notebook``, ``scipy-notebook`` and ``tensorflow-notebook``. The names has to be changed because the resulting image stream name would conflict with similar images from Jupyter Project in certain circumstances.*
+
 Building the Minimal Notebook
 -----------------------------
 
@@ -19,10 +21,10 @@ oc create -f https://raw.githubusercontent.com/jupyter-on-openshift/jupyter-note
 This will create a build configuration in your OpenShift project to build the minimal Jupyter notebook image using the Python 3.5 S2I builder. You can watch the progress of the build by running:
 
 ```
-oc logs --follow bc/minimal-notebook
+oc logs --follow bc/s2i-minimal-notebook
 ```
 
-A tagged image ``minimal-notebook:3.5`` should be created in your project.
+A tagged image ``s2i-minimal-notebook:3.5`` should be created in your project.
 
 Once the build is complete, further builds will run to create ``scipy-notebook:3.5`` and ``tensorflow-notebook:3.5``. These are custom notebook images which include additional Python packages. The set of packages installed with these mirrors the images of the same name provided by the Jupyter project team.
 
@@ -32,7 +34,7 @@ Deploying the Minimal Notebook
 To deploy the minimal Jupyter notebook image run the following commands:
 
 ```
-oc new-app minimal-notebook:3.5 --name my-notebook \
+oc new-app s2i-minimal-notebook:3.5 --name my-notebook \
     --env JUPYTER_NOTEBOOK_PASSWORD=mypassword
 ```
 
@@ -68,13 +70,13 @@ oc delete all --selector app=my-notebook
 Creating Custom Notebook Images
 -------------------------------
 
-To create custom notebooks images, you can use the ``minimal-notebook:3.5`` image as a S2I builder.
+To create custom notebooks images, you can use the ``s2i-minimal-notebook:3.5`` image as a S2I builder.
 
 To replicate what loading the ``images.json`` file did in creating builds for ``scipy-notebook``, you could have instead run:
 
 ```
 oc new-build --name my-scipy-notebook \
-  --image-stream minimal-notebook:3.5 \
+  --image-stream s2i-minimal-notebook:3.5 \
   --code https://github.com/jupyter-on-openshift/jupyter-notebooks \
   --context-dir scipy-notebook
 ```
@@ -110,7 +112,7 @@ run:
 
 ```
 oc new-build --name jakevdp-notebook \
-  --image-stream minimal-notebook:3.5 \
+  --image-stream s2i-minimal-notebook:3.5 \
   --code https://github.com/jakevdp/PythonDataScienceHandbook
 ```
 
