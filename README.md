@@ -26,7 +26,7 @@ oc logs --follow bc/s2i-minimal-notebook
 
 A tagged image ``s2i-minimal-notebook:3.5`` should be created in your project.
 
-Once the build is complete, further builds will run to create ``scipy-notebook:3.5`` and ``tensorflow-notebook:3.5``. These are custom notebook images which include additional Python packages. The set of packages installed with these mirrors the images of the same name provided by the Jupyter project team.
+Once the build is complete, further builds will run to create ``s2i-scipy-notebook:3.5`` and ``s2i-tensorflow-notebook:3.5``. These are custom notebook images which include additional Python packages. The set of packages installed with these mirrors the images of the same name provided by the Jupyter project team.
 
 Deploying the Minimal Notebook
 ------------------------------
@@ -72,7 +72,7 @@ Creating Custom Notebook Images
 
 To create custom notebooks images, you can use the ``s2i-minimal-notebook:3.5`` image as a S2I builder.
 
-To replicate what loading the ``images.json`` file did in creating builds for ``scipy-notebook``, you could have instead run:
+To replicate what loading the ``images.json`` file did in creating builds for ``s2i-scipy-notebook``, you could have instead run:
 
 ```
 oc new-build --name my-scipy-notebook \
