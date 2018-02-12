@@ -9,6 +9,32 @@ The minimal Jupyter notebook image can be deployed to create an empty Jupyter no
 
 *Note: The images provided by this repository were originally called ``minimal-notebook``, ``scipy-notebook`` and ``tensorflow-notebook``. The names has to be changed because the resulting image stream name would conflict with similar images from Jupyter Project in certain circumstances.*
 
+Why not use Jupyter Project images?
+-----------------------------------
+
+The Jupyter Project provides a number of images for notebooks on Docker Hub. These are:
+
+* base-notebook
+* r-notebook
+* minimal-notebook
+* scipy-notebook
+* tensorflow-notebook
+* datascience-notebook
+* pyspark-notebook
+* all-spark-notebook
+
+The GitHub repository used to create these is:
+
+* https://github.com/jupyter/docker-stacks
+
+There are two problems with using these images with OpenShift.
+
+The first is that the images will not run out of the box on an OpenShift installation. This is because they have not been designed properly to work with an assigned user ID. It is possible to partly work around this so they do at least start, by editing the deployment so that the container is run with an extra supplemental group with ``gid`` of ``100``. Even with this change, the images do not dynamically provide ``passwd`` and ``group`` file entries for the assigned user ID, so some software which you want to use may still fail.
+
+The second problem is the size of these images. The ``base-notebook`` image is close to 3GB in size. This means they cannot be used on OpenShift environments, such as OpenShift Online, which cap image/container filesystem size at 3GB. The ``s2i-minimal-notebook`` image created from this repository in contrast is about 1GB in size. Part of the issue with the size of the Jupyter Project images appears to be due to the use of an ``ubuntu`` base image and Anaconda Python distribution.
+
+For most use cases, the variants of the above images for just Python, which are provided here will work as substitutes. The images here also have the added benefit of being able to be used as Source-to-Image (S2I) builders so you can easily incorporate notebook files and required packages into a derived new image.
+
 Building the Minimal Notebook
 -----------------------------
 
