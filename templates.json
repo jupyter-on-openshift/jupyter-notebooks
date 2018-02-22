@@ -154,7 +154,7 @@
                                 "imageChangeParams": {
                                     "automatic": true,
                                     "containerNames": [
-                                        "${APPLICATION_NAME}"
+                                        "notebook"
                                     ],
                                     "from": {
                                         "kind": "ImageStreamTag",
@@ -178,7 +178,7 @@
                             "spec": {
                                 "containers": [
                                     {
-                                        "name": "${APPLICATION_NAME}",
+                                        "name": "notebook",
                                         "image": "${APPLICATION_NAME}:latest",
                                         "ports": [
                                             {
@@ -374,7 +374,7 @@
                                 "imageChangeParams": {
                                     "automatic": true,
                                     "containerNames": [
-                                        "${APPLICATION_NAME}"
+                                        "notebook"
                                     ],
                                     "from": {
                                         "kind": "ImageStreamTag",
@@ -398,7 +398,7 @@
                             "spec": {
                                 "containers": [
                                     {
-                                        "name": "${APPLICATION_NAME}",
+                                        "name": "notebook",
                                         "image": "${APPLICATION_NAME}:latest",
                                         "ports": [
                                             {
