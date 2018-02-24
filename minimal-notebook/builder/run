@@ -6,8 +6,4 @@ set -eo pipefail
 
 # Start the Jupyter notebook instance.
 
-if [ x"$JUPYTER_INTERFACE_TYPE" = x"lab" ]; then
-    exec jupyter lab --no-browser --ip=0.0.0.0 --port=8080
-else
-    exec jupyter notebook --no-browser --ip=0.0.0.0 --port=8080
-fi
+. /opt/app-root/bin/start-notebook.sh
