@@ -16,6 +16,7 @@ if [[ ! -z "${JUPYTER_INSTALL_LAB}" ]]; then
     jupyter labextension install @jupyterlab/hub-extension@^0.8.0
     npm cache clean
     rm -rf $HOME/.cache/yarn
+    rm -rf $HOME/.node-gyp
 fi
 
 # Create default Jupyter notebook configuation.
