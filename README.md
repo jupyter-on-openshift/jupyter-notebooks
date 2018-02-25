@@ -142,6 +142,30 @@ oc new-build --name jakevdp-notebook \
   --code https://github.com/jakevdp/PythonDataScienceHandbook
 ```
 
+Enabling JupyterLab Interface
+-----------------------------
+
+The Jupyter notebook images created from this repository do not by default come with the JupyterLab extension enabled. This is because enabling the JupyterLab extension triggers additional build steps which require over 2Gi in memory to run. OpenShift environments such as OpenShift Online have a cap on how much memory can be allocated to a build, of 2Gi. Attempting to build the images with the JupyterLab extension enabled will cause an out of memory error.
+
+If you are using Minishift, where there is no cap, or an OpenShift environment which has a larger cap than 2Gi of memory available to pods, you can add the JupyterLab extension for the minimal notebook by running:
+
+```
+oc patch bc/s2i-minimal-notebook --patch '{"spec":{"resources":{"limits":{"memory":"3Gi"}}}}'
+oc set env bc/s2i-minimal-notebook JUPYTER_INSTALL_LAB=true
+```
+
+This increases the memory allowed for the build and sets the ``JUPYTER_INSTALL_LAB`` environment variable to have the JupyterLab extension added when the image is built. To trigger a new build run:
+
+```
+oc start-build s2i-minimal-notebook
+```
+
+This only adds the JupyterLab extension to the image, you still need to enable it for a deployed notebook. This can be done by setting the ``JUPYTER_ENABLE_LAB`` environment variable.
+
+```
+oc set env dc/jakevdp-notebook JUPYTER_ENABLE_LAB=true
+```
+
 Using the OpenShift Web Console
 -------------------------------
 
