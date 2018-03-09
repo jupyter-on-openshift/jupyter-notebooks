@@ -1,9 +1,22 @@
 #!/bin/bash
 
-set -x
-
 set -eo pipefail
 
-# Start the Jupyter notebook instance.
+# Start the Jupyter notebook instance. Run using supervisord if enabled.
 
-. /opt/app-root/bin/start-notebook.sh
+if [[ ! -z "${JUPYTER_ENABLE_SUPERVISORD}" ]]; then
+    # Generate a supervisord.conf file if one doesn't exist.
+
+    if [ ! -f /opt/app-root/etc/supervisord.conf ]; then
+	cp /opt/app-root/supervisor/supervisord.conf \
+           /opt/app-root/etc/supervisord.conf
+    fi
+
+    # Startup supervisord against the configuration and keep it in the
+    # foreground so becomes process ID 1 for the container.
+
+    exec /opt/app-root/supervisor/bin/supervisord --nodaemon \
+	--configuration /opt/app-root/etc/supervisord.conf
+else
+    . /opt/app-root/bin/start-notebook.sh
+fi

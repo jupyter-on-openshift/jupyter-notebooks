@@ -2,6 +2,10 @@
 
 set -eo pipefail
 
+########################################################################
+# INFO: Install everything that's required for Jupyter notebooks here.
+########################################################################
+
 # Ensure we are using the latest pip and wheel packages.
 
 pip install -U pip setuptools wheel
@@ -39,8 +43,6 @@ mv /tmp/src/builder /opt/app-root/builder
 
 mv /tmp/src/*.sh /opt/app-root/bin
 
-rm -rf /tmp/src
-
 # Ensure passwd/group file intercept happens for any shell environment.
 
 echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl_enable
@@ -50,6 +52,84 @@ echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl
 echo " -----> Creating additional directories."
 
 mkdir -p /opt/app-root/data
+
+########################################################################
+# WARNING: The following series of steps install supervisord using the
+# system Python, not SCL Python. Always put stuff that needs to be done
+# using the SCL Python above this line as the steps below will fiddle
+# with the environment so that SCL Python isn't used.
+########################################################################
+
+# Override PATH for the assemble script so that /usr/bin precedes
+# /opt/app-root/bin so wrong Python version isn't found during setup
+# if using Python S2I base image.
+
+PATH=/usr/bin:$PATH
+
+# Override HOME directory for the assemble script so that per user
+# files are not installed under /opt/app-root/src. This means that
+# the per user Python area is located under /opt/app-root/.local.
+
+HOME=/opt/app-root
+
+# Install pip for Python 2.7.
+
+curl -s -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py
+
+/usr/bin/python /tmp/get-pip.py --user
+
+rm -f /tmp/get-pip.py
+
+# Install virtualenv for Python 2.7.
+
+/opt/app-root/.local/bin/pip install --no-cache-dir --user virtualenv
+
+# Create a virtual environment for Python 2.7.
+
+/opt/app-root/.local/bin/virtualenv /opt/app-root/supervisor
+
+# Install supervisor into the virtual environment.
+
+source /opt/app-root/supervisor/bin/activate
+
+pip install --no-cache-dir 'supervisor<3.4.0'
+
+# Link supervisorctl into /opt/app-root/bin so in PATH.
+
+mkdir -p /opt/app-root/bin
+
+ln -s /opt/app-root/supervisor/bin/supervisorctl /opt/app-root/bin/supervisorctl
+
+# Remove the per user Python area and cache as shouldn't need them now.
+
+rm -rf /opt/app-root/.local /opt/app-root/.cache
+
+# Generate default supervisord.conf file.
+
+echo_supervisord_conf | \
+    sed -e 's%^logfile=/tmp/supervisord.log%logfile=/dev/fd/1%' \
+        -e 's%^logfile_maxbytes=50MB%logfile_maxbytes=0%' > \
+        /opt/app-root/supervisor/supervisord.conf
+
+cat >> /opt/app-root/supervisor/supervisord.conf << EOF
+
+[program:notebook]
+command=start-notebook.sh
+stdout_logfile=/proc/1/fd/1
+stdout_logfile_maxbytes=0
+redirect_stderr=true
+autorestart=true
+exitcodes=0
+EOF
+
+########################################################################
+# WARNING: Don't do anything beyond this point that relies on Python.
+########################################################################
+
+# Make sure the S2I source directory is empty as we will use the image
+# produced to run further S2I builds.
+
+rm -rf /tmp/src
 
 # Fixup permissions on directories and files.
 
