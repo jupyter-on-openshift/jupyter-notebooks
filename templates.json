@@ -129,6 +129,11 @@
                     "name": "NOTEBOOK_PASSWORD",
                     "value": "",
                     "required": true
+                },
+                {
+                    "name": "NOTEBOOK_MEMORY",
+                    "value": "512Mi",
+                    "required": true
                 }
             ],
             "objects": [
@@ -186,6 +191,11 @@
                                                 "protocol": "TCP"
                                             }
                                         ],
+                                        "resources": {
+                                            "limits": {
+                                                "memory": "${NOTEBOOK_MEMORY}"
+                                            }
+                                        },
                                         "env": [
                                             {
                                                 "name": "JUPYTER_NOTEBOOK_PASSWORD",
@@ -270,6 +280,11 @@
                 {
                     "name": "NOTEBOOK_PASSWORD",
                     "value": "",
+                    "required": true
+                },
+                {
+                    "name": "NOTEBOOK_MEMORY",
+                    "value": "512Mi",
                     "required": true
                 },
                 {
@@ -406,6 +421,11 @@
                                                 "protocol": "TCP"
                                             }
                                         ],
+                                        "resources": {
+                                            "limits": {
+                                                "memory": "${NOTEBOOK_MEMORY}"
+                                            }
+                                        },
                                         "env": [
                                             {
                                                 "name": "JUPYTER_NOTEBOOK_PASSWORD",
