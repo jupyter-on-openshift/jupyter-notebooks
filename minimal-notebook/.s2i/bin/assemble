@@ -10,6 +10,10 @@ set -eo pipefail
 
 pip install -U pip setuptools wheel
 
+# Install mod_wsgi for use in optional webdav support.
+
+pip install 'mod_wsgi==4.6.2'
+
 # Install base packages needed for running Jupyter Notebooks. 
 
 pip install -r /tmp/src/requirements.txt
@@ -23,11 +27,10 @@ if [[ ! -z "${JUPYTER_INSTALL_LAB}" ]]; then
     rm -rf $HOME/.node-gyp
 fi
 
-# Create default Jupyter notebook configuation.
+# Copy into place default config files for Jupyter and Apache webdav.
 
-mkdir -p /opt/app-root/configs
-
-cp /tmp/src/jupyter_notebook_config.py /opt/app-root/configs/
+cp /tmp/src/jupyter_notebook_config.py /opt/app-root/etc/
+cp /tmp/src/httpd-webdav.conf /opt/app-root/etc/
 
 # This S2I assemble script is only used when creating the custom image.
 # For when running the image, or using it as a S2I builder, we use a second
@@ -118,8 +121,16 @@ command=start-notebook.sh
 stdout_logfile=/proc/1/fd/1
 stdout_logfile_maxbytes=0
 redirect_stderr=true
+autostart=true
 autorestart=true
 exitcodes=0
+
+[program:webdav]
+command=start-webdav.sh
+stdout_logfile=/proc/1/fd/1
+stdout_logfile_maxbytes=0
+redirect_stderr=true
+autostart=%(ENV_JUPYTER_ENABLE_WEBDAV)s
 EOF
 
 ########################################################################

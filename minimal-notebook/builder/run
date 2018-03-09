@@ -2,6 +2,29 @@
 
 set -eo pipefail
 
+# Generate htdigest password file for webdav access if it doesn't exist.
+
+JUPYTER_ENABLE_WEBDAV=${JUPYTER_ENABLE_WEBDAV:-false}
+
+export JUPYTER_ENABLE_WEBDAV
+
+DEPLOYMENT=`echo $HOSTNAME | sed -e 's/^\(.*\)-[^-]*-[^-]*$/\1/'`
+NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
+
+WEBDAV_REALM=$NAMESPACE/$DEPLOYMENT
+WEBDAV_USERFILE=/opt/app-root/etc/webdav.htdigest
+
+export WEBDAV_REALM
+export WEBDAV_USERFILE
+
+if [ ! -f $WEBDAV_USERFILE ]; then
+    touch $WEBDAV_USERFILE
+    if [[ ! -z "${JUPYTER_NOTEBOOK_PASSWORD}" ]]; then
+	DIGEST="$( printf "%s:%s:%s" "jupyter" "$WEBDAV_REALM" "$JUPYTER_NOTEBOOK_PASSWORD" | md5sum | awk '{print $1}' )"
+	printf "%s:%s:%s\n" "jupyter" "$WEBDAV_REALM" "$DIGEST" >> $WEBDAV_USERFILE
+    fi
+fi
+
 # Start the Jupyter notebook instance. Run using supervisord if enabled.
 
 if [[ ! -z "${JUPYTER_ENABLE_SUPERVISORD}" ]]; then

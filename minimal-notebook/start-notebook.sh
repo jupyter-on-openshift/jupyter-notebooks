@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-NOTEBOOK_ARGS="$NOTEBOOK_ARGS --config=/opt/app-root/configs/jupyter_notebook_config.py"
+NOTEBOOK_ARGS="$NOTEBOOK_ARGS --config=/opt/app-root/etc/jupyter_notebook_config.py"
 
 if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
   exec /opt/app-root/bin/start-singleuser.sh "$@"
