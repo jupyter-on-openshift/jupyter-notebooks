@@ -565,7 +565,7 @@
                                 "initContainers": [
                                     {
                                         "name": "setup-volume",
-                                        "image": "${APPLICATION_NAME}",
+                                        "image": "${NOTEBOOK_IMAGE}",
                                         "command": [
                                             "setup-volume.sh",
                                             "/opt/app-root",
@@ -587,7 +587,7 @@
                                 "containers": [
                                     {
                                         "name": "notebook",
-                                        "image": "${APPLICATION_NAME}:latest",
+                                        "image": "${NOTEBOOK_IMAGE}",
                                         "ports": [
                                             {
                                                 "containerPort": 8080,
