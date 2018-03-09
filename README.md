@@ -169,10 +169,17 @@ oc set env dc/jakevdp-notebook JUPYTER_ENABLE_LAB=true
 Using the OpenShift Web Console
 -------------------------------
 
-To make it easier to build and deploy notebooks images from the web console, templates are provided. To load the templates run:
+To make it easier to build and deploy Jupyter Notebooks, templates are provided. To load the templates run:
 
 ```
 oc create -f https://raw.githubusercontent.com/jupyter-on-openshift/jupyter-notebooks/master/templates.json
 ```
 
-From the _Service Catalog_ filter on _jupyter_.
+The templates are:
+
+* ``notebook-deployer`` - Template for deploying a Jupyter Notebook image.
+* ``notebook-builder`` - Template for building a custom Jupyter Notebook image using Source-to-Image (S2I) against a hosted Git repository. Python packages listed in the ``requirements.txt`` file of the Git repository will be installed and any files, including notebook images, will be copied into the image. The image can then be deployed using ``notebook-deployer``.
+* ``notebook-quickstart`` Template for building and deploying a custom Jupyter Notebook image. This effectively combines ``notebook-builder`` and ``notebook-deployer``.
+* ``notebook-workspace`` - Template for deploying a Jupyter Notebook image which also attaches a persistent volume, and copies any installed Python packages and notebooks into the persistent volume. Any work done through to notebooks or to install additional Python packages will survive a restart of the Jupyter Notebook environment. A webdav interface is also enabled to allow remote mounting of the persistent volume.
+
+The templates can be used from the command line or from the web console. To find the templates in the web console, click on the _Add to Project_ menu in the top navigation bar and then click _Select from Project_. Filter on _jupyter_ if necessary.
