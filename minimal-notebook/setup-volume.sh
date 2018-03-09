@@ -3,7 +3,7 @@
 SRC=$1
 DEST=$2
 
-if [ -f $DEST/.delete-volume]; then
+if [ -f $DEST/.delete-volume ]; then
     rm -rf $DEST
 fi
 
