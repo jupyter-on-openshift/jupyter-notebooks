@@ -468,6 +468,270 @@
                     }
                 }
             ]
+        },
+        {
+            "kind": "Template",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "notebook-workspace",
+                "annotations": {
+                    "openshift.io/display-name": "Jupyter Notebook Workspace",
+                    "description": "Template for deploying Jupyter Notebook images with persistent storage and webdav filesystem access.",
+                    "iconClass": "icon-python",
+                    "tags": "python,jupyter"
+                }
+            },
+            "parameters": [
+                {
+                    "name": "APPLICATION_NAME",
+                    "value": "custom-notebook",
+                    "required": true
+                },
+                {
+                    "name": "NOTEBOOK_IMAGE",
+                    "value": "s2i-minimal-notebook:3.5",
+                    "required": true
+                },
+                {
+                    "name": "NOTEBOOK_PASSWORD",
+                    "value": "",
+                    "required": true
+                },
+                {
+                    "name": "NOTEBOOK_MEMORY",
+                    "value": "512Mi",
+                    "required": true
+                },
+                {
+                    "name": "VOLUME_SIZE",
+                    "value": "1Gi",
+                    "required": true
+                }
+            ],
+            "objects": [
+                {
+                    "kind": "DeploymentConfig",
+                    "apiVersion": "v1",
+                    "metadata": {
+                        "name": "${APPLICATION_NAME}",
+                        "labels": {
+                            "app": "${APPLICATION_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "strategy": {
+                            "type": "Recreate"
+                        },
+                        "triggers": [
+                            {
+                                "type": "ConfigChange"
+                            },
+                            {
+                                "type": "ImageChange",
+                                "imageChangeParams": {
+                                    "automatic": true,
+                                    "containerNames": [
+                                        "setup-volume",
+                                        "notebook"
+                                    ],
+                                    "from": {
+                                        "kind": "ImageStreamTag",
+                                        "name": "${NOTEBOOK_IMAGE}"
+                                    }
+                                }
+                            }
+                        ],
+                        "replicas": 1,
+                        "selector": {
+                            "app": "${APPLICATION_NAME}",
+                            "deploymentconfig": "${APPLICATION_NAME}"
+                        },
+                        "template": {
+                            "metadata": {
+                                "labels": {
+                                    "app": "${APPLICATION_NAME}",
+                                    "deploymentconfig": "${APPLICATION_NAME}"
+                                }
+                            },
+                            "spec": {
+                                "volumes": [
+                                    {
+                                        "name": "data",
+                                        "persistentVolumeClaim": {
+                                            "claimName": "${APPLICATION_NAME}-data"
+                                        }
+                                    }
+                                ],
+                                "initContainers": [
+                                    {
+                                        "name": "setup-volume",
+                                        "image": "${APPLICATION_NAME}",
+                                        "command": [
+                                            "setup-volume.sh",
+                                            "/opt/app-root",
+                                            "/mnt/app-root"
+                                        ],
+                                        "resources": {
+                                            "limits": {
+                                                "memory": "256Mi"
+                                            }
+                                        },
+                                        "volumeMounts": [
+                                            {
+                                                "name": "data",
+                                                "mountPath": "/mnt"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "containers": [
+                                    {
+                                        "name": "notebook",
+                                        "image": "${APPLICATION_NAME}:latest",
+                                        "ports": [
+                                            {
+                                                "containerPort": 8080,
+                                                "protocol": "TCP"
+                                            },
+                                            {
+                                                "containerPort": 8081,
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "limits": {
+                                                "memory": "${NOTEBOOK_MEMORY}"
+                                            }
+                                        },
+                                        "volumeMounts": [
+                                            {
+                                                "name": "data",
+                                                "mountPath": "/opt/app-root",
+                                                "subPath": "app-root"
+                                            }
+                                        ],
+                                        "env": [
+                                            {
+                                                "name": "JUPYTER_NOTEBOOK_PASSWORD",
+                                                "value": "${NOTEBOOK_PASSWORD}"
+                                            },
+                                            {
+                                                "name": "JUPYTER_ENABLE_SUPERVISORD",
+                                                "value": "true"
+                                            },
+                                            {
+                                                "name": "JUPYTER_ENABLE_WEBDAV",
+                                                "value": "true"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind": "PersistentVolumeClaim",
+                    "apiVersion": "v1",
+                    "metadata": {
+                        "name": "${APPLICATION_NAME}-data",
+                        "labels": {
+                            "app": "${APPLICATION_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "accessModes": [
+                            "ReadWriteOnce"
+                        ],
+                        "resources": {
+                            "requests": {
+                                "storage": "${VOLUME_SIZE}"
+                            }
+                        }
+                    }
+                },
+                {
+                    "kind": "Service",
+                    "apiVersion": "v1",
+                    "metadata": {
+                        "name": "${APPLICATION_NAME}",
+                        "labels": {
+                            "app": "${APPLICATION_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "ports": [
+                            {
+                                "name": "8080-tcp",
+                                "protocol": "TCP",
+                                "port": 8080,
+                                "targetPort": 8080
+                            },
+                            {
+                                "name": "8081-tcp",
+                                "protocol": "TCP",
+                                "port": 8081,
+                                "targetPort": 8081
+                            }
+                        ],
+                        "selector": {
+                            "app": "${APPLICATION_NAME}",
+                            "deploymentconfig": "${APPLICATION_NAME}"
+                        }
+                    }
+                },
+                {
+                    "kind": "Route",
+                    "apiVersion": "v1",
+                    "metadata": {
+                        "name": "${APPLICATION_NAME}",
+                        "labels": {
+                            "app": "${APPLICATION_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "host": "",
+                        "to": {
+                            "kind": "Service",
+                            "name": "${APPLICATION_NAME}",
+                            "weight": 100
+                        },
+                        "port": {
+                            "targetPort": "8080-tcp"
+                        },
+                        "tls": {
+                            "termination": "edge",
+                            "insecureEdgeTerminationPolicy": "Redirect"
+                        }
+                    }
+                },
+                {
+                    "kind": "Route",
+                    "apiVersion": "v1",
+                    "metadata": {
+                        "name": "${APPLICATION_NAME}-webdav",
+                        "labels": {
+                            "app": "${APPLICATION_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "host": "",
+                        "path": "/webdav",
+                        "to": {
+                            "kind": "Service",
+                            "name": "${APPLICATION_NAME}",
+                            "weight": 100
+                        },
+                        "port": {
+                            "targetPort": "8081-tcp"
+                        },
+                        "tls": {
+                            "termination": "edge",
+                            "insecureEdgeTerminationPolicy": "Redirect"
+                        }
+                    }
+                }
+            ]
         }
     ]
 }
