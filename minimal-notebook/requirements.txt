@@ -1,4 +1,5 @@
 notebook==5.4.*
 jupyterhub==0.8.*
 jupyterlab==0.31.*
-jupyter_kernel_gateway==2.0.*
+#jupyter_kernel_gateway==2.0.*
+git+https://github.com/jupyter-on-openshift/kernel_gateway.git#egg=jupyter_kernel_gateway
