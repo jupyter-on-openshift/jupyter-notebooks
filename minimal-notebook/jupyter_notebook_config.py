@@ -1,8 +1,9 @@
+import os
+
 c.NotebookApp.ip = '*'
 c.NotebookApp.port = 8080
 c.NotebookApp.open_browser = False
 
-import os
 password = os.environ.get('JUPYTER_NOTEBOOK_PASSWORD')
 if password:
     import notebook.auth

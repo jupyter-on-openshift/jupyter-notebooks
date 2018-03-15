@@ -30,6 +30,7 @@ fi
 # Copy into place default config files for Jupyter and Apache webdav.
 
 cp /tmp/src/jupyter_notebook_config.py /opt/app-root/etc/
+cp /tmp/src/jupyter_kernel_gateway_config.py /opt/app-root/etc/
 cp /tmp/src/httpd-webdav.conf /opt/app-root/etc/
 
 # This S2I assemble script is only used when creating the custom image.
