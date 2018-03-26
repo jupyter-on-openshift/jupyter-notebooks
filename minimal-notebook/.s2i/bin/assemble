@@ -132,6 +132,9 @@ stdout_logfile=/proc/1/fd/1
 stdout_logfile_maxbytes=0
 redirect_stderr=true
 autostart=%(ENV_JUPYTER_ENABLE_WEBDAV)s
+
+[include]
+files = /opt/app-root/src/.supervisord/*.conf
 EOF
 
 ########################################################################
