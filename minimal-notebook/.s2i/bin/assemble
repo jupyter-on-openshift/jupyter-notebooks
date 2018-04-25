@@ -21,7 +21,7 @@ pip install -r /tmp/src/requirements.txt
 # Activate JupyterHub extension for JupyterLab.
 
 if [[ ! -z "${JUPYTER_INSTALL_LAB}" ]]; then
-    jupyter labextension install @jupyterlab/hub-extension@^0.8.0
+    jupyter labextension install @jupyterlab/hub-extension@^0.8.1
     npm cache clean
     rm -rf $HOME/.cache/yarn
     rm -rf $HOME/.node-gyp
