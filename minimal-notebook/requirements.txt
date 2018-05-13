@@ -3,3 +3,5 @@ jupyterhub==0.8.1
 jupyterlab==0.32.0
 #jupyter_kernel_gateway==2.0.*
 git+https://github.com/jupyter-on-openshift/kernel_gateway.git#egg=jupyter_kernel_gateway
+dask==0.17.4
+distributed==1.21.8
