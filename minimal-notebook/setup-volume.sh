@@ -8,16 +8,19 @@ SRC=$1
 DEST=$2
 
 if [ -f $DEST/.delete-volume ]; then
-    rm -f $DEST.copied-volume
     rm -rf $DEST
 fi
 
-if [ -f $DEST.copied-volume ]; then
-   exit
+if [ -d $DEST ]; then
+    exit
 fi
 
-mkdir $DEST
+if [ -d $DEST.setup-volume ]; then
+    rm -rf $DEST.setup-volume
+fi
 
-tar -C $SRC -cf - . | tar -C $DEST -xvf -
+mkdir -p $DEST.setup-volume
 
-touch $DEST.copied-volume
+tar -C $SRC -cf - . | tar -C $DEST.setup-volume -xvf -
+
+mv $DEST.setup-volume $DEST
