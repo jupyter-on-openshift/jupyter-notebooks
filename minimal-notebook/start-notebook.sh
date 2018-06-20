@@ -23,7 +23,7 @@ if [ x"$JUPYTER_MASTER_FILES" != x"" ]; then
     fi
 fi
 
-if [ x"$JUPYTER_WORKSPACE_NAME' != x"" ]; then
+if [ x"$JUPYTER_WORKSPACE_NAME" != x"" ]; then
     JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/tree/$JUPYTER_WORKSPACE_NAME"
 fi
 
