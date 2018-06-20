@@ -21,7 +21,7 @@ if [[ "$JUPYTER_PROGRAM_ARGS $@" != *"--ip="* ]]; then
   JUPYTER_PROGRAM_ARGS="--ip=0.0.0.0 $JUPYTER_PROGRAM_ARGS"
 fi
 
-JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --config=/opt/app-root/configs/jupyter_notebook_config.py"
+JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --config=/opt/app-root/etc/jupyter_notebook_config.py"
 
 if [ ! -z "$JUPYTER_ENABLE_LAB" ]; then
   JUPYTER_PROGRAM="jupyter labhub"
