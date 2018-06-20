@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 set -eo pipefail
 
 export $(cgroup-limits)

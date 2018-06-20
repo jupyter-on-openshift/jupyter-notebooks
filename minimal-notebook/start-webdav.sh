@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 WEBDAV_PORT=${WEBDAV_PORT:-8081}
 
 ARGS=""

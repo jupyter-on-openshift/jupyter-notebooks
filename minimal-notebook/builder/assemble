@@ -7,3 +7,13 @@ set -eo pipefail
 rm -f requirements.txt
 
 /usr/libexec/s2i/assemble
+
+# Move files from application source directory to master files directory
+# if directory has been specified. This is to facilitate later copying
+# of files into a persistent volume on startup of instance.
+
+if [ x"$JUPYTER_MASTER_FILES" != x"" ]; then
+    mkdir -p $JUPYTER_MASTER_FILES
+    shopt -s dotglob
+    mv /opt/app-root/src/* $JUPYTER_MASTER_FILES
+fi
