@@ -13,20 +13,24 @@ if [ x"$JUPYTER_MASTER_FILES" != x"" ]; then
     fi
 fi
 
-if [ x"$JUPYTER_WORKSPACE_NAME" != x"" ]; then
-    JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/tree/$JUPYTER_WORKSPACE_NAME"
+if [ -z "$JUPYTER_ENABLE_LAB" ]; then
+    if [ x"$JUPYTER_WORKSPACE_NAME" != x"" ]; then
+        JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/tree/$JUPYTER_WORKSPACE_NAME"
+    fi
+else
+    JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/lab"
 fi
 
 if [[ "$JUPYTER_PROGRAM_ARGS $@" != *"--ip="* ]]; then
-  JUPYTER_PROGRAM_ARGS="--ip=0.0.0.0 $JUPYTER_PROGRAM_ARGS"
+    JUPYTER_PROGRAM_ARGS="--ip=0.0.0.0 $JUPYTER_PROGRAM_ARGS"
 fi
 
 JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --config=/opt/app-root/etc/jupyter_notebook_config.py"
 
 if [ ! -z "$JUPYTER_ENABLE_LAB" ]; then
-  JUPYTER_PROGRAM="jupyter labhub"
+    JUPYTER_PROGRAM="jupyter labhub"
 else
-  JUPYTER_PROGRAM="jupyterhub-singleuser"
+    JUPYTER_PROGRAM="jupyterhub-singleuser"
 fi
 
 . /opt/app-root/bin/start.sh $JUPYTER_PROGRAM $JUPYTER_PROGRAM_ARGS "$@"

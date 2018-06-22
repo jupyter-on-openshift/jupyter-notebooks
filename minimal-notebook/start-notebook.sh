@@ -23,8 +23,10 @@ if [ x"$JUPYTER_MASTER_FILES" != x"" ]; then
     fi
 fi
 
-if [ x"$JUPYTER_WORKSPACE_NAME" != x"" ]; then
-    JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/tree/$JUPYTER_WORKSPACE_NAME"
+if [ -z "$JUPYTER_ENABLE_LAB" ]; then
+    if [ x"$JUPYTER_WORKSPACE_NAME" != x"" ]; then
+        JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/tree/$JUPYTER_WORKSPACE_NAME"
+    fi
 fi
 
 JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --config=/opt/app-root/etc/jupyter_notebook_config.py"
