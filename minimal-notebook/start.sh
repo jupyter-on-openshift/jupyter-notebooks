@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eo pipefail
+set -x
 
 if [ $# -eq 0 ]; then
     echo "Executing the command: bash"
