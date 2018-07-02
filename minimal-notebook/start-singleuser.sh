@@ -33,4 +33,4 @@ else
     JUPYTER_PROGRAM="jupyterhub-singleuser"
 fi
 
-. /opt/app-root/bin/start.sh $JUPYTER_PROGRAM $JUPYTER_PROGRAM_ARGS "$@"
+exec /opt/app-root/bin/start.sh $JUPYTER_PROGRAM $JUPYTER_PROGRAM_ARGS "$@"

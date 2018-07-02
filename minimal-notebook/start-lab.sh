@@ -13,4 +13,4 @@ fi
 
 JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --config=/opt/app-root/etc/jupyter_notebook_config.py"
 
-. /opt/app-root/bin/start.sh jupyter lab $JUPYTER_PROGRAM_ARGS "$@"
+exec /opt/app-root/bin/start.sh jupyter lab $JUPYTER_PROGRAM_ARGS "$@"
