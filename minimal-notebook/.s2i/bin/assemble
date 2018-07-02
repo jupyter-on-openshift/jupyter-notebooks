@@ -20,7 +20,9 @@ pip install -r /tmp/src/requirements.txt
 
 # Activate JupyterHub extension for JupyterLab.
 
-if [[ ! -z "${JUPYTER_INSTALL_LAB}" ]]; then
+JUPYTER_INSTALL_LAB=`echo "$JUPYTER_INSTALL_LAB" | tr '[A-Z]' '[a-z]'`
+
+if [[ "$JUPYTER_INSTALL_LAB" =~ ^(true|yes|y|1)$ ]]; then
     jupyter labextension install @jupyterlab/hub-extension@^0.8.1
     npm cache clean --force
     rm -rf $HOME/.cache/yarn
