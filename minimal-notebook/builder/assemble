@@ -4,7 +4,20 @@ set -x
 
 set -eo pipefail
 
+# Ensure that any requirements.txt from prior build has been removed.
+
 rm -f requirements.txt
+
+# If there is no requirements.txt for this build, but one exists in the
+# /tmp/build directory (added via a build secret), use that instead.
+
+if [ ! -f /tmp/src/requirements.txt ]; then
+    if [ -f /tmp/build/requirements.txt ]; then
+        mv /tmp/build/requirements.txt /tmp/src/requirements.txt
+    fi
+fi
+
+# Run the original Python S2I assemble script to install packages.
 
 /usr/libexec/s2i/assemble
 
