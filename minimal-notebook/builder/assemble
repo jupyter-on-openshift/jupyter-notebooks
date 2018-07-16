@@ -12,7 +12,7 @@ rm -f requirements.txt
 # via a build secret), use that. This will override any original.
 
 if [ -s /tmp/build/requirements.txt ]; then
-    mv /tmp/build/requirements.txt /tmp/src/requirements.txt
+    cp /tmp/build/requirements.txt /tmp/src/requirements.txt
 fi
 
 # Run the original Python S2I assemble script to install packages.
