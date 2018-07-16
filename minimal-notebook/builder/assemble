@@ -8,13 +8,11 @@ set -eo pipefail
 
 rm -f requirements.txt
 
-# If there is no requirements.txt for this build, but one exists in the
-# /tmp/build directory (added via a build secret), use that instead.
+# If a requirements.txt file exists in the /tmp/build directory (added
+# via a build secret), use that. This will override any original.
 
-if [ ! -f /tmp/src/requirements.txt ]; then
-    if [ -s /tmp/build/requirements.txt ]; then
-        mv /tmp/build/requirements.txt /tmp/src/requirements.txt
-    fi
+if [ -s /tmp/build/requirements.txt ]; then
+    mv /tmp/build/requirements.txt /tmp/src/requirements.txt
 fi
 
 # Run the original Python S2I assemble script to install packages.
