@@ -12,7 +12,7 @@ rm -f requirements.txt
 # /tmp/build directory (added via a build secret), use that instead.
 
 if [ ! -f /tmp/src/requirements.txt ]; then
-    if [ -f /tmp/build/requirements.txt ]; then
+    if [ -s /tmp/build/requirements.txt ]; then
         mv /tmp/build/requirements.txt /tmp/src/requirements.txt
     fi
 fi
