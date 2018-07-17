@@ -7,7 +7,12 @@ This includes input source code for creating a minimal Jupyter notebook image us
 
 The minimal Jupyter notebook image can be deployed to create an empty Jupyter notebook workspace in OpenShift that you can work with. The same image, can also be used as a S2I builder to create customised Jupyter notebook images with additional Python packages installed, or notebook files preloaded.
 
-*Note: The images provided by this repository were originally called ``minimal-notebook``, ``scipy-notebook`` and ``tensorflow-notebook``. The names has to be changed because the resulting image stream name would conflict with similar images from Jupyter Project in certain circumstances.*
+Use a stable version of this repository
+---------------------------------------
+
+When using this repository, unless you are participating in the development and testing of the images produced from this repository, always use a tagged version. Do not use master or development branches as your builds or deployments could break across across versions.
+
+You should therefore always use any files for creating images or templates from the required tagged version. These will reference the appropriate version. If you have created your own resource definitions to build from the repository, ensure that the ``ref`` field of the Git settings for the build refers to the desired version.
 
 Why not use Jupyter Project images?
 -----------------------------------
