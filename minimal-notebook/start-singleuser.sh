@@ -13,12 +13,14 @@ if [ x"$JUPYTER_MASTER_FILES" != x"" ]; then
     fi
 fi
 
-if [ -z "$JUPYTER_ENABLE_LAB" ]; then
+JUPYTER_ENABLE_LAB=`echo "$JUPYTER_ENABLE_LAB" | tr '[A-Z]' '[a-z]'`
+
+if [[ "$JUPYTER_ENABLE_LAB" =~ ^(true|yes|y|1)$ ]]; then
+    JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/lab"
+else
     if [ x"$JUPYTER_WORKSPACE_NAME" != x"" ]; then
         JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/tree/$JUPYTER_WORKSPACE_NAME"
     fi
-else
-    JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --NotebookApp.default_url=/lab"
 fi
 
 if [[ "$JUPYTER_PROGRAM_ARGS $@" != *"--ip="* ]]; then
