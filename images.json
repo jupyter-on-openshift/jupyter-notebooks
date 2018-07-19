@@ -39,7 +39,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/jupyter-on-openshift/jupyter-notebooks",
-                        "ref": "1.0.0"
+                        "ref": "1.0.1"
                     },
                     "contextDir": "minimal-notebook"
                 },
@@ -103,7 +103,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/jupyter-on-openshift/jupyter-notebooks",
-                        "ref": "1.0.0"
+                        "ref": "1.0.1"
                     },
                     "contextDir": "scipy-notebook"
                 },
@@ -166,7 +166,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/jupyter-on-openshift/jupyter-notebooks",
-                        "ref": "1.0.0"
+                        "ref": "1.0.1"
                     },
                     "contextDir": "tensorflow-notebook"
                 },
