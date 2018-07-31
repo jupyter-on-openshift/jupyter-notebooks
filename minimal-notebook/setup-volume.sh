@@ -13,12 +13,12 @@ fi
 
 if [ -d $DEST ]; then
     if [ -f $DEST/.sync-volume ]; then
-        if ! [[ "$NOTEBOOK_SYNC_VOLUME" =~ ^(false|no|n|0)$ ]]; then
-            NOTEBOOK_SYNC_VOLUME=yes
+        if ! [[ "$JUPYTER_SYNC_VOLUME" =~ ^(false|no|n|0)$ ]]; then
+            JUPYTER_SYNC_VOLUME=yes
         fi
     fi
 
-    if [[ "$NOTEBOOK_SYNC_VOLUME" =~ ^(true|yes|y|1)$ ]]; then
+    if [[ "$JUPYTER_SYNC_VOLUME" =~ ^(true|yes|y|1)$ ]]; then
         rsync -ar --ignore-existing $SRC/. $DEST
     fi
 
