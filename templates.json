@@ -203,7 +203,8 @@
                                             }
                                         ]
                                     }
-                                ]
+                                ],
+                                "automountServiceAccountToken": false
                             }
                         }
                     }
@@ -433,7 +434,8 @@
                                             }
                                         ]
                                     }
-                                ]
+                                ],
+                                "automountServiceAccountToken": false
                             }
                         }
                     }
@@ -645,7 +647,8 @@
                                             }
                                         ]
                                     }
-                                ]
+                                ],
+                                "automountServiceAccountToken": false
                             }
                         }
                     }
