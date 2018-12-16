@@ -12,7 +12,7 @@ pip install -U pip setuptools wheel
 
 # Install mod_wsgi for use in optional webdav support.
 
-pip install 'mod_wsgi==4.6.2'
+pip install 'mod_wsgi==4.6.5'
 
 # Install base packages needed for running Jupyter Notebooks. 
 
