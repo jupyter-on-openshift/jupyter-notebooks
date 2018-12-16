@@ -23,7 +23,7 @@ pip install -r /tmp/src/requirements.txt
 JUPYTER_INSTALL_LAB=`echo "$JUPYTER_INSTALL_LAB" | tr '[A-Z]' '[a-z]'`
 
 if [[ "$JUPYTER_INSTALL_LAB" =~ ^(true|yes|y|1)$ ]]; then
-    jupyter labextension install @jupyterlab/hub-extension@^0.8.1
+    jupyter labextension install @jupyterlab/hub-extension@^0.12.0
     npm cache clean --force
     rm -rf $HOME/.cache/yarn
     rm -rf $HOME/.node-gyp
