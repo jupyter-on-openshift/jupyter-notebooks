@@ -8,10 +8,14 @@ JUPYTER_ENABLE_WEBDAV=${JUPYTER_ENABLE_WEBDAV:-false}
 
 export JUPYTER_ENABLE_WEBDAV
 
-DEPLOYMENT=`echo $HOSTNAME | sed -e 's/^\(.*\)-[^-]*-[^-]*$/\1/'`
-NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
+if [ -f /var/run/secrets/kubernetes.io/serviceaccount/namespace ]; then
+    DEPLOYMENT=`echo $HOSTNAME | sed -e 's/^\(.*\)-[^-]*-[^-]*$/\1/'`
+    NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
+    WEBDAV_REALM=$NAMESPACE/$DEPLOYMENT
+else
+    WEBDAV_REALM=jupyter-on-openshift/jupyter-notebooks
+fi
 
-WEBDAV_REALM=$NAMESPACE/$DEPLOYMENT
 WEBDAV_USERFILE=/opt/app-root/etc/webdav.htdigest
 
 export WEBDAV_REALM
