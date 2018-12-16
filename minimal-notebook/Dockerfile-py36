@@ -14,4 +14,4 @@ USER 1001
 
 RUN /tmp/scripts/assemble
 
-CMD [ "/tmp/scripts/run" ]
+CMD [ "/opt/app-root/builder/run" ]
