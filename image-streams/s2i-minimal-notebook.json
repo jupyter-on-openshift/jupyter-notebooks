@@ -1,0 +1,30 @@
+{
+    "kind": "List",
+    "apiVersion": "v1",
+    "items": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "s2i-minimal-notebook",
+                "labels": {
+                    "build": "s2i-minimal-notebook"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": true
+                },
+                "tags": [
+                    {
+                        "name": "3.6",
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "quay.io/jupyteronopenshift/s2i-minimal-notebook-py36:2.0.0"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
