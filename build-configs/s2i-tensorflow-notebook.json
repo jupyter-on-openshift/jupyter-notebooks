@@ -1,0 +1,69 @@
+{
+    "kind": "List",
+    "apiVersion": "v1",
+    "items": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "s2i-tensorflow-notebook",
+                "labels": {
+                    "build": "s2i-tensorflow-notebook"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": true
+                }
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "s2i-tensorflow-notebook",
+                "labels": {
+                    "build": "s2i-tensorflow-notebook"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange"
+                    }
+                ],
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/jupyter-on-openshift/jupyter-notebooks",
+                        "ref": "2.0.0"
+                    },
+                    "contextDir": "tensorflow-notebook"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "s2i-minimal-notebook:3.6"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "s2i-tensorflow-notebook:3.6"
+                    }
+                },
+                "resources": {
+                    "limits": {
+                        "memory": "512Mi"
+                    }
+                }
+            }
+        }
+    ]
+}
