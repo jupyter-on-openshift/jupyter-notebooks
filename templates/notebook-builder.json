@@ -1,0 +1,100 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "notebook-builder",
+        "annotations": {
+            "openshift.io/display-name": "Jupyter Notebook Builder",
+            "description": "Template for creating customised Jupyter Notebook images.",
+            "iconClass": "icon-python",
+            "tags": "python,jupyter"
+        }
+    },
+    "parameters": [
+        {
+            "name": "NOTEBOOK_NAME",
+            "value": "custom-notebook",
+            "required": true
+        },
+        {
+            "name": "BUILDER_IMAGE",
+            "value": "s2i-minimal-notebook:3.6",
+            "required": true
+        },
+        {
+            "name": "GIT_REPOSITORY_URL",
+            "value": "",
+            "required": true
+        },
+        {
+            "name": "GIT_REFERENCE",
+            "value": "master",
+            "required": true
+        },
+        {
+            "name": "CONTEXT_DIR",
+            "value": "",
+            "required": false
+        }
+    ],
+    "objects": [
+        {
+            "kind": "ImageStream",
+            "apiVersion": "image.openshift.io/v1",
+            "metadata": {
+                "name": "${NOTEBOOK_NAME}",
+                "labels": {
+                    "build": "${NOTEBOOK_NAME}"
+                }
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": true
+                }
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "${NOTEBOOK_NAME}",
+                "labels": {
+                    "build": "${NOTEBOOK_NAME}"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange"
+                    }
+                ],
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "${GIT_REPOSITORY_URL}",
+                        "ref": "${GIT_REFERENCE}"
+                    },
+                    "contextDir": "${CONTEXT_DIR}"
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "${BUILDER_IMAGE}"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "${NOTEBOOK_NAME}:latest"
+                    }
+                }
+            }
+        }
+    ]
+}
