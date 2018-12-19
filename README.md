@@ -5,12 +5,12 @@ This repository contains software to make it easier to use Jupyter Notebooks on 
 
 This includes input source code for creating a minimal Jupyter notebook image using the Source-to-Image (S2I) build process. The image can be built in OpenShift, separately using the ``s2i`` tool, or using a ``docker build``.
 
-The minimal Jupyter notebook image can be deployed to create an empty Jupyter notebook workspace in OpenShift that you can work with. The same image, can also be used as a S2I builder to create customised Jupyter notebook images with additional Python packages installed, or notebook files preloaded.
+The minimal Jupyter notebook image can be deployed to create an empty Jupyter notebook workspace in OpenShift that you can work with. The same image, can also be used as an S2I builder to create customised Jupyter notebook images with additional Python packages installed, or notebook files preloaded.
 
 Use a stable version of this repository
 ---------------------------------------
 
-When using this repository, unless you are participating in the development and testing of the images produced from this repository, always use a tagged version. Do not use master or development branches as your builds or deployments could break across across versions.
+When using this repository, unless you are participating in the development and testing of the images produced from this repository, always use a tagged version. Do not use master or development branches as your builds or deployments could break across versions.
 
 You should therefore always use any files for creating images or templates from the required tagged version. These will reference the appropriate version. If you have created your own resource definitions to build from the repository, ensure that the ``ref`` field of the Git settings for the build refers to the desired version.
 
@@ -51,10 +51,10 @@ The name of the latest build version of this image is:
 
 * quay.io/jupyteronopenshift/s2i-minimal-notebook-py36:latest
 
-Although this image could be imported into an OpenShift cluster using ``oc import-image``, it is recommended instead that you load it using the supplied image stream definition using the command:
+Although this image could be imported into an OpenShift cluster using ``oc import-image``, it is recommended instead that you load it using the supplied image stream definition, using:
 
 ```
-oc create -f https://raw.githubusercontent.com/jupyter-on-openshift/jupyter-notebooks/develop/image-streams/s2i-minimal-notebook.json
+oc create -f https://raw.githubusercontent.com/jupyter-on-openshift/jupyter-notebooks/master/image-streams/s2i-minimal-notebook.json
 ```
 
 This is preferred, as it will create an image stream with tag corresponding to the Python version being used, with the underlying image reference referring to a specific version of the image on quay.io, rather than the latest build. This ensures that the version of the image doesn't change to a newer version of the image which you haven't tested.
@@ -88,29 +88,29 @@ Deploying the Minimal Notebook
 To deploy the minimal notebook image run the following commands:
 
 ```
-oc new-app s2i-minimal-notebook:3.6 --name my-notebook \
+oc new-app s2i-minimal-notebook:3.6 --name minimal-notebook \
     --env JUPYTER_NOTEBOOK_PASSWORD=mypassword
 ```
 
 The ``JUPYTER_NOTEBOOK_PASSWORD`` environment variable will allow you to access the notebook instance with a known password.
 
-Deployment should be quick if you build the minimal notebook from source code. If you used the image streams, the first deployment may be slow as the image will need to be pulled down from quay.io. You can monitor progress of the deployment if necessary by running:
+Deployment should be quick if you build the minimal notebook from source code. If you used the image stream, the first deployment may be slow as the image will need to be pulled down from quay.io. You can monitor progress of the deployment if necessary by running:
 
 ```
-oc rollout status dc/my-notebook
+oc rollout status dc/minimal-notebook
 ```
 
 Because the notebook instance is not exposed to the public network by default, you will need to expose it. To do this, and ensure that access is over a secure connection run:
 
 ```
-oc create route edge my-notebook --service my-notebook \
+oc create route edge minimal-notebook --service minimal-notebook \
     --insecure-policy Redirect
 ```
 
 To see the hostname which is assigned to the notebook instance, run:
 
 ```
-oc get route/my-notebook
+oc get route/minimal-notebook
 ```
 
 Access the hostname shown using your browser and enter the password you used above.
@@ -118,7 +118,7 @@ Access the hostname shown using your browser and enter the password you used abo
 To delete the notebook instance when done, run:
 
 ```
-oc delete all --selector app=my-notebook
+oc delete all --selector app=minimal-notebook
 ```
 
 Creating Custom Notebook Images
@@ -136,7 +136,7 @@ In the directories you will find a ``requirements.txt`` file listing the additio
 To use the S2I build process to create a custom image, you can then run the command:
 
 ```
-oc new-build --name my-scipy-notebook \
+oc new-build --name custom-notebook \
   --image-stream s2i-minimal-notebook:3.6 \
   --code https://github.com/jupyter-on-openshift/jupyter-notebooks \
   --context-dir scipy-notebook
@@ -145,25 +145,25 @@ oc new-build --name my-scipy-notebook \
 If any build of a custom image fails because the default memory limit on builds in your OpenShift cluster is too small, you can increase the limit by running:
 
 ```
-oc patch bc/my-scipy-notebook \
+oc patch bc/custom-notebook \
   --patch '{"spec":{"resources":{"limits":{"memory":"1Gi"}}}}'
 ```
 
 and start a new build by running:
 
 ```
-oc start-build bc/my-scipy-notebook
+oc start-build bc/custom-notebook
 ```
 
 If using the custom notebook image with JupyterHub running in OpenShift, you may also need to set the image lookup policy on the image stream created.
 
 ```
-oc set image-lookup is/my-scipy-notebook
+oc set image-lookup is/custom-notebook
 ```
 
 This is necessary so that the image stream reference in the pod definition created by JupyterHub will be able to resolve the name to that of the image stream.
 
-For the ``scipy-notebook`` and ``tensorflow-notebook`` examples provided, if you wish to use the images, instead of running the above commands, you can instead use build configuration supplied, by running:
+For the ``scipy-notebook`` and ``tensorflow-notebook`` examples provided, if you wish to use the images, instead of running the above commands, after you have loaded the image stream for, or built the minimal notebook image, you can instead run the commands:
 
 ```
 oc create -f https://raw.githubusercontent.com/jupyter-on-openshift/jupyter-notebooks/master/build-configs/s2i-scipy-notebook.json
@@ -190,13 +190,13 @@ Enabling JupyterLab Interface
 By default the minimal notebook when deployed will start up with the classic Jupyter notebook web interface. If you wish to use the newer JupyterLab web interface, it can be enabled by setting the ``JUPYTER_ENABLE_LAB`` environment variable. This can be set on the deployment configuration using:
 
 ```
-oc set env dc/my-notebook JUPYTER_ENABLE_LAB=true
+oc set env dc/minimal-notebook JUPYTER_ENABLE_LAB=true
 ```
 
 If you wish for any use of a custom notebook to use the JupyterLab interface, you can instead set the environment variable on the build configuration using:
 
 ```
-oc set env bc/my-notebook JUPYTER_ENABLE_LAB=true
+oc set env bc/custom-notebook JUPYTER_ENABLE_LAB=true
 ```
 
 or by including in the source code repository used as input to the S2I build for the custom notebook, an ``.s2i/environment`` file, containing:
