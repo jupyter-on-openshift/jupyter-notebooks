@@ -4,7 +4,7 @@
     "items": [
         {
             "kind": "ImageStream",
-            "apiVersion": "v1",
+            "apiVersion": "image.openshift.io/v1",
             "metadata": {
                 "name": "s2i-minimal-notebook",
                 "labels": {
