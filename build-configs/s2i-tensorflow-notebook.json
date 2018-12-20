@@ -21,7 +21,7 @@
             "kind": "BuildConfig",
             "apiVersion": "build.openshift.io/v1",
             "metadata": {
-                "name": "s2i-tensorflow-notebook",
+                "name": "s2i-tensorflow-notebook-py36",
                 "labels": {
                     "build": "s2i-tensorflow-notebook"
                 }
@@ -39,7 +39,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/jupyter-on-openshift/jupyter-notebooks",
-                        "ref": "2.0.0"
+                        "ref": "2.0.1"
                     },
                     "contextDir": "tensorflow-notebook"
                 },
