@@ -3,6 +3,7 @@ import os
 c.NotebookApp.ip = '0.0.0.0'
 c.NotebookApp.port = 8080
 c.NotebookApp.open_browser = False
+c.NotebookApp.quit_button = False
 
 password = os.environ.get('JUPYTER_NOTEBOOK_PASSWORD')
 if password:
