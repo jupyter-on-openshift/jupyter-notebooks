@@ -39,7 +39,7 @@
                     "type": "Git",
                     "git": {
                         "uri": "https://github.com/jupyter-on-openshift/jupyter-notebooks",
-                        "ref": "2.0.1"
+                        "ref": "2.1.0"
                     },
                     "contextDir": "scipy-notebook"
                 },
