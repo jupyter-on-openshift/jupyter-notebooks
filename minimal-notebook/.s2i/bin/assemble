@@ -116,6 +116,7 @@ echo_supervisord_conf | \
 cat >> /opt/app-root/supervisor/supervisord.conf << EOF
 
 [program:notebook]
+process_name=notebook
 command=start-notebook.sh
 stdout_logfile=/proc/1/fd/1
 stdout_logfile_maxbytes=0
@@ -124,7 +125,13 @@ autostart=true
 autorestart=true
 exitcodes=0
 
+[eventlistener:notebook_exit]
+command=stop-supervisord.sh
+process_name=notebook
+events=PROCESS_STATE_EXITED
+
 [program:webdav]
+process_name=webdav
 command=start-webdav.sh
 stdout_logfile=/proc/1/fd/1
 stdout_logfile_maxbytes=0
