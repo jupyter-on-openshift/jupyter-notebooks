@@ -54,7 +54,7 @@ if [[ ! -z "${JUPYTER_ENABLE_SUPERVISORD}" ]]; then
     # Startup supervisord against the configuration and keep it in the
     # foreground so becomes process ID 1 for the container.
 
-    exec /opt/app-root/supervisor/bin/supervisord --nodaemon \
+    exec supervisord --nodaemon \
 	--configuration $SUPERVISORD_CONF
 else
     . /opt/app-root/bin/start-notebook.sh
