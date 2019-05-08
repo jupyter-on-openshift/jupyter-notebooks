@@ -8,19 +8,19 @@ set -eo pipefail
 
 # Ensure we are using the latest pip and wheel packages.
 
-pip install -U pip setuptools wheel
+pip3 install -U pip setuptools wheel
 
 # Install mod_wsgi for use in optional webdav support.
 
-pip install 'mod_wsgi==4.6.5'
+pip3 install 'mod_wsgi==4.6.5'
 
 # Install base packages needed for running Jupyter Notebooks. 
 
-pip install -r /tmp/src/requirements.txt
+pip3 install -r /tmp/src/requirements.txt
 
 # Activate JupyterHub extension for JupyterLab.
 
-jupyter labextension install @jupyterlab/hub-extension@^0.12.0
+jupyter labextension install @jupyterlab/hub-extension
 npm cache clean --force
 rm -rf $HOME/.cache/yarn
 rm -rf $HOME/.node-gyp
@@ -35,72 +35,21 @@ cp /tmp/src/httpd-webdav.conf /opt/app-root/etc/
 # For when running the image, or using it as a S2I builder, we use a second
 # set of custom S2I scripts. We now need to move these into the correct
 # location and have the custom image use those by dropping in an image
-# metadata file which overrides the labels of the base image.
+# meta file which overrides the labels of the base image.
 
 mkdir -p /tmp/.s2i
-
 mv /tmp/src/builder/image_metadata.json /tmp/.s2i/image_metadata.json
-
 mv /tmp/src/builder /opt/app-root/builder
-
 mv /tmp/src/*.sh /opt/app-root/bin
 
 # Ensure passwd/group file intercept happens for any shell environment.
 
 echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl_enable
 
-# Create additional directories.
-
-echo " -----> Creating additional directories."
-
-mkdir -p /opt/app-root/data
-
-########################################################################
-# WARNING: The following series of steps install supervisord using the
-# system Python, not SCL Python. Always put stuff that needs to be done
-# using the SCL Python above this line as the steps below will fiddle
-# with the environment so that SCL Python isn't used.
-########################################################################
-
-# Override PATH for the assemble script so that /usr/bin precedes
-# /opt/app-root/bin so wrong Python version isn't found during setup
-# if using Python S2I base image.
-
-PATH=/usr/bin:$PATH
-
-# Override HOME directory for the assemble script so that per user
-# files are not installed under /opt/app-root/src. This means that
-# the per user Python area is located under /opt/app-root/.local.
+# Set home and install supervisor
 
 HOME=/opt/app-root
-
-# Install pip for Python 2.7.
-
-curl -s -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py
-
-/usr/bin/python /tmp/get-pip.py --user
-
-rm -f /tmp/get-pip.py
-
-# Install virtualenv for Python 2.7.
-
-/opt/app-root/.local/bin/pip install --no-cache-dir --user virtualenv
-
-# Create a virtual environment for Python 2.7.
-
-/opt/app-root/.local/bin/virtualenv /opt/app-root/supervisor
-
-# Install supervisor into the virtual environment.
-
-source /opt/app-root/supervisor/bin/activate
-
-pip install --no-cache-dir 'supervisor<3.4.0'
-
-# Link supervisorctl into /opt/app-root/bin so in PATH.
-
-mkdir -p /opt/app-root/bin
-
-ln -s /opt/app-root/supervisor/bin/supervisorctl /opt/app-root/bin/supervisorctl
+pip3 install --no-cache-dir supervisor==4.0.*
 
 # Remove the per user Python area and cache as shouldn't need them now.
 
@@ -108,6 +57,7 @@ rm -rf /opt/app-root/.local /opt/app-root/.cache
 
 # Generate default supervisord.conf file.
 
+mkdir /opt/app-root/supervisor
 echo_supervisord_conf | \
     sed -e 's%^logfile=/tmp/supervisord.log%logfile=/dev/fd/1%' \
         -e 's%^logfile_maxbytes=50MB%logfile_maxbytes=0%' > \
@@ -141,10 +91,6 @@ autostart=%(ENV_JUPYTER_ENABLE_WEBDAV)s
 [include]
 files = /opt/app-root/src/.supervisord/*.conf
 EOF
-
-########################################################################
-# WARNING: Don't do anything beyond this point that relies on Python.
-########################################################################
 
 # Make sure the S2I source directory is empty as we will use the image
 # produced to run further S2I builds.
