@@ -8,15 +8,15 @@ set -eo pipefail
 
 # Ensure we are using the latest pip and wheel packages.
 
-pip3 install -U pip setuptools wheel
+pip install -U pip setuptools wheel
 
 # Install mod_wsgi for use in optional webdav support.
 
-pip3 install 'mod_wsgi==4.6.5'
+pip install 'mod_wsgi==4.6.5'
 
 # Install base packages needed for running Jupyter Notebooks. 
 
-pip3 install -r /tmp/src/requirements.txt
+pip install -r /tmp/src/requirements.txt
 
 # Activate JupyterHub extension for JupyterLab.
 
@@ -49,7 +49,7 @@ echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl
 # Set home and install supervisor
 
 HOME=/opt/app-root
-pip3 install --no-cache-dir supervisor==4.0.*
+pip install --no-cache-dir supervisor==4.0.*
 
 # Remove the per user Python area and cache as shouldn't need them now.
 
