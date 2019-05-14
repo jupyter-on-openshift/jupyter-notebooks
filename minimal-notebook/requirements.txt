@@ -3,5 +3,5 @@ jupyterhub==1.0.0
 jupyterlab==0.35.6
 jupyter_kernel_gateway==2.3.0
 dask==1.2.2
-distributed==1.28.1
+distributed==1.28.1 # sudo dnf install redhat-rpm-config python2-devel
 tornado<6.0.0
