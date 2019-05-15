@@ -15,18 +15,16 @@ pip install -U pip setuptools wheel
 pip install 'mod_wsgi==4.6.5'
 
 # Install base packages needed for running Jupyter Notebooks. 
+pip install -r /tmp/src/requirements.txt
 
-if hash python3 2>/dev/null; then
-    pip install -r /tmp/src/requirements.txt
-    # Activate JupyterHub extension for JupyterLab.
-    # The hub extension install fails for python2
+#if hash python3 2>/dev/null; then
+#    # Activate JupyterHub extension for JupyterLab.
+#    # The hub extension install fails for python2
     jupyter labextension install @jupyterlab/hub-extension
     npm cache clean --force
     rm -rf $HOME/.cache/yarn
     rm -rf $HOME/.node-gyp
-else
-    pip install -r /tmp/src/requirements_python2.txt
-fi
+#fi
 
 # Copy into place default config files for Jupyter and Apache webdav.
 
