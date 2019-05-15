@@ -55,11 +55,18 @@ mv /tmp/src/builder /opt/app-root/builder
 
 mv /tmp/src/supervisor /opt/app-root/etc/supervisor
 
+mv /tmp/src/gateway /opt/app-root/gateway
+
 mv /tmp/src/*.sh /opt/app-root/bin
 
 # Ensure passwd/group file intercept happens for any shell environment.
 
 echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl_enable
+
+# Install packages required by the proxy process.
+
+(cd /opt/app-root/gateway && source scl_source enable rh-nodejs10 && \
+    npm install --production)
 
 # Create additional directories.
 

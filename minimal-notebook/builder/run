@@ -29,24 +29,19 @@ if [ ! -f $WEBDAV_USERFILE ]; then
     fi
 fi
 
-# Start the Jupyter notebook instance. Run using supervisord if enabled.
+# Start the Jupyter notebook instance. Run using supervisord if enabled,
+# or it is required by webdav access.
+
+if [ x"$JUPYTER_ENABLE_WEBDAV" == x"true" ]; then
+    JUPYTER_ENABLE_SUPERVISORD=true
+fi
 
 if [[ ! -z "${JUPYTER_ENABLE_SUPERVISORD}" ]]; then
-    if [ -f /opt/app-root/src/supervisord.conf ]; then
-        # Use a supervisord.conf that was provided by the user.
-
-        SUPERVISORD_CONF=/opt/app-root/src/supervisord.conf
-    else
-        # Use the default supervisord.conf file.
-
-        SUPERVISORD_CONF=/opt/app-root/etc/supervisord.conf
-    fi
-
     # Startup supervisord against the configuration and keep it in the
     # foreground so becomes process ID 1 for the container.
 
     exec /opt/app-root/bin/supervisord --nodaemon \
-	--configuration $SUPERVISORD_CONF
+	--configuration /opt/app-root/etc/supervisord.conf
 else
     . /opt/app-root/bin/start-notebook.sh
 fi
