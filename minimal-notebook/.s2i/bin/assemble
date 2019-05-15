@@ -20,10 +20,19 @@ pip install -r /tmp/src/requirements.txt
 
 # Activate JupyterHub extension for JupyterLab.
 
-jupyter labextension install @jupyterlab/hub-extension@^0.12.0
-npm cache clean --force
-rm -rf $HOME/.cache/yarn
-rm -rf $HOME/.node-gyp
+JUPYTERLAB_HUB_EXTENSION_VERSION=${JUPYTERLAB_HUB_EXTENSION_VERSION:-0.12.0}
+
+function module_installed() {
+    python -c "import sys, pkgutil; sys.exit(0 if pkgutil.find_loader('$1') else 1)"
+}
+
+if module_installed 'jupyterhub' && module_installed 'jupyterlab'; then
+    jupyter labextension install \
+        @jupyterlab/hub-extension@^${JUPYTERLAB_HUB_EXTENSION_VERSION}
+    npm cache clean --force
+    rm -rf $HOME/.cache/yarn
+    rm -rf $HOME/.node-gyp
+fi
 
 # Copy into place default config files for Jupyter and Apache webdav.
 
