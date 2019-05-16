@@ -2,6 +2,8 @@
 
 set -eo pipefail
 
+set -x
+
 # Generate htdigest password file for webdav access if it doesn't exist.
 
 JUPYTER_ENABLE_WEBDAV=${JUPYTER_ENABLE_WEBDAV:-false}
@@ -29,33 +31,19 @@ if [ ! -f $WEBDAV_USERFILE ]; then
     fi
 fi
 
-# Start the Jupyter notebook instance. Run using supervisord if enabled.
+# Start the Jupyter notebook instance. Run using supervisord if enabled,
+# or it is required by webdav access.
+
+if [ x"$JUPYTER_ENABLE_WEBDAV" == x"true" ]; then
+    JUPYTER_ENABLE_SUPERVISORD=true
+fi
 
 if [[ ! -z "${JUPYTER_ENABLE_SUPERVISORD}" ]]; then
-    if [ -f /opt/app-root/src/supervisord.conf ]; then
-        # Use a supervisord.conf that was provided by the user.
-
-        SUPERVISORD_CONF=/opt/app-root/src/supervisord.conf
-    else
-        # Generate a supervisord.conf file if one doesn't exist.
-        # We create a copy of the original sample so that the
-        # original still exists and can be restored if necessary.
-        # This is useful when moving everything into a persistent
-        # volume and the user is then editing the configuration.
-
-        if [ ! -f /opt/app-root/etc/supervisord.conf ]; then
-            cp /opt/app-root/supervisor/supervisord.conf \
-               /opt/app-root/etc/supervisord.conf
-        fi
-
-        SUPERVISORD_CONF=/opt/app-root/etc/supervisord.conf
-    fi
-
     # Startup supervisord against the configuration and keep it in the
     # foreground so becomes process ID 1 for the container.
 
-    exec /opt/app-root/supervisor/bin/supervisord --nodaemon \
-	--configuration $SUPERVISORD_CONF
+    exec /opt/app-root/bin/supervisord --nodaemon \
+	--configuration /opt/app-root/etc/supervisord.conf
 else
-    . /opt/app-root/bin/start-notebook.sh
+    . /opt/app-root/bin/start-notebook.sh "$@"
 fi
