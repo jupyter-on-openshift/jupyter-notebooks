@@ -2,6 +2,8 @@
 
 set -eo pipefail
 
+set -x
+
 # Generate htdigest password file for webdav access if it doesn't exist.
 
 JUPYTER_ENABLE_WEBDAV=${JUPYTER_ENABLE_WEBDAV:-false}
@@ -43,5 +45,5 @@ if [[ ! -z "${JUPYTER_ENABLE_SUPERVISORD}" ]]; then
     exec /opt/app-root/bin/supervisord --nodaemon \
 	--configuration /opt/app-root/etc/supervisord.conf
 else
-    . /opt/app-root/bin/start-notebook.sh
+    . /opt/app-root/bin/start-notebook.sh "$@"
 fi
