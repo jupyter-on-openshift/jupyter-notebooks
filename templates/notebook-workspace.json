@@ -145,10 +145,6 @@
                                         "value": "${NOTEBOOK_PASSWORD}"
                                     },
                                     {
-                                        "name": "JUPYTER_ENABLE_SUPERVISORD",
-                                        "value": "true"
-                                    },
-                                    {
                                         "name": "JUPYTER_ENABLE_WEBDAV",
                                         "value": "true"
                                     }
