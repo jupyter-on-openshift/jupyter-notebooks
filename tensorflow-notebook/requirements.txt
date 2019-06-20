@@ -28,3 +28,4 @@ xlrd==1.2.*
 
 tensorflow==1.11.*
 keras==2.2.*
+jupyter-tensorboard==0.1.10

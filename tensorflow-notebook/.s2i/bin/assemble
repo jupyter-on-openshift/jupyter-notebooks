@@ -31,6 +31,8 @@ cd $HOME
 
 rm -rf /tmp/facets
 
+jupyter tensorboard enable --sys-prefix
+
 # Import matplotlib the first time to build the font cache.
 
 MPLBACKEND=Agg python -c "import matplotlib.pyplot"
