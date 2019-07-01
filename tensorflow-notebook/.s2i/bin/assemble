@@ -14,8 +14,8 @@ jupyter nbextension enable --py widgetsnbextension --sys-prefix
 
 # Also activate ipywidgets/bokeh extension for JupyterLab.
 
-jupyter labextension install @jupyter-widgets/jupyterlab-manager@^0.38.1
-jupyter labextension install jupyterlab_bokeh@0.6.3
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter labextension install jupyterlab_bokeh
 
 # Install facets which does not have a pip package.
 
