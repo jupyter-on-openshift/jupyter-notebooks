@@ -11,19 +11,6 @@ set -eo pipefail
 pip install -U pip setuptools wheel
 pip install -r /tmp/src/requirements.txt
 
-# Activate JupyterHub extension for JupyterLab.
-
-function module_installed() {
-    python -c "import sys, pkgutil; sys.exit(0 if pkgutil.find_loader('$1') else 1)"
-}
-
-if module_installed 'jupyterhub' && module_installed 'jupyterlab'; then
-    jupyter labextension install @jupyterlab/hub-extension
-    npm cache clean --force
-    rm -rf $HOME/.cache/yarn
-    rm -rf $HOME/.node-gyp
-fi
-
 # Copy into place default config files for Jupyter and Apache webdav.
 
 cp /tmp/src/jupyter_notebook_config.py /opt/app-root/etc/
