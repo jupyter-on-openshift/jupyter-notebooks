@@ -9,7 +9,13 @@ set -eo pipefail
 # Ensure we are using the latest pip and wheel packages.
 
 pip install -U pip setuptools wheel
+
+# Install packages and clean up npm cache
 pip install -r /tmp/src/requirements.txt
+npm cache clean --force
+rm -rf $HOME/.cache/yarn
+rm -rf $HOME/.node-gyp
+
 
 # Copy into place default config files for Jupyter and Apache webdav.
 
