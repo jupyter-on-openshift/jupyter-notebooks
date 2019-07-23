@@ -8,32 +8,13 @@ set -eo pipefail
 
 # Ensure we are using the latest pip and wheel packages.
 
-pip install -U pip setuptools wheel
+pip install -U pip setuptools wheel --no-cache-dir
 
-# Install mod_wsgi for use in optional webdav support.
-
-pip install 'mod_wsgi==4.6.5'
-
-# Install supervisord for managing multiple applications.
-
-pip install 'supervisor==4.0.2'
-
-# Install base packages needed for running Jupyter Notebooks. 
-
-pip install -r /tmp/src/requirements.txt
-
-# Activate JupyterHub extension for JupyterLab.
-
-function module_installed() {
-    python -c "import sys, pkgutil; sys.exit(0 if pkgutil.find_loader('$1') else 1)"
-}
-
-if module_installed 'jupyterhub' && module_installed 'jupyterlab'; then
-    jupyter labextension install @jupyterlab/hub-extension
-    npm cache clean --force
-    rm -rf $HOME/.cache/yarn
-    rm -rf $HOME/.node-gyp
-fi
+# Install packages and clean up npm cache
+pip install -r /tmp/src/requirements.txt --no-cache-dir
+npm cache clean --force
+rm -rf $HOME/.cache/yarn
+rm -rf $HOME/.node-gyp
 
 # Copy into place default config files for Jupyter and Apache webdav.
 
