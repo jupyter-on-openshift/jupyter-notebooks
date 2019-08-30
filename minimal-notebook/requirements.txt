@@ -6,7 +6,7 @@ supervisor==4.0.4
 
 # Install base packages needed for running Jupyter Notebooks.
 jupyterhub==0.9.6;python_version>"2.7"
-jupyterlab==1.0.*;python_version>"2.7"
+jupyterlab==1.1.*;python_version>"2.7"
 notebook
 jupyter_kernel_gateway==2.4.0
 dask<3
