@@ -1,13 +1,13 @@
 # Install mod_wsgi for use in optional webdav support.
-mod_wsgi==4.6.7
+mod_wsgi==4.6.*
 
 # Install supervisord for managing multiple applications.
-supervisor==4.0.4
+supervisor==4.0.*
 
 # Install base packages needed for running Jupyter Notebooks.
-jupyterhub==0.9.6;python_version>"2.7"
-jupyterlab==1.1.*;python_version>"2.7"
-notebook
-jupyter_kernel_gateway==2.4.0
-dask<3
-distributed<3
+jupyterhub==0.9.6 #update to 1.0.* together with jupyterhub
+jupyterlab==1.1.*
+notebook==6.0.*
+jupyter_kernel_gateway==2.4.*
+dask==2.3.*
+distributed==2.3.*
