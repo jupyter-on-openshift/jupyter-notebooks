@@ -26,8 +26,8 @@ export WEBDAV_USERFILE
 if [ ! -f $WEBDAV_USERFILE ]; then
     touch $WEBDAV_USERFILE
     if [[ ! -z "${JUPYTER_NOTEBOOK_PASSWORD}" ]]; then
-	DIGEST="$( printf "%s:%s:%s" "jupyter" "$WEBDAV_REALM" "$JUPYTER_NOTEBOOK_PASSWORD" | md5sum | awk '{print $1}' )"
-	printf "%s:%s:%s\n" "jupyter" "$WEBDAV_REALM" "$DIGEST" >> $WEBDAV_USERFILE
+        DIGEST="$( printf "%s:%s:%s" "jupyter" "$WEBDAV_REALM" "$JUPYTER_NOTEBOOK_PASSWORD" | md5sum | awk '{print $1}' )"
+        printf "%s:%s:%s\n" "jupyter" "$WEBDAV_REALM" "$DIGEST" >> $WEBDAV_USERFILE
     fi
 fi
 
@@ -43,7 +43,7 @@ if [[ ! -z "${JUPYTER_ENABLE_SUPERVISORD}" ]]; then
     # foreground so becomes process ID 1 for the container.
 
     exec /opt/app-root/bin/supervisord --nodaemon \
-	--configuration /opt/app-root/etc/supervisord.conf
+        --configuration /opt/app-root/etc/supervisord.conf
 else
     . /opt/app-root/bin/start-notebook.sh "$@"
 fi
