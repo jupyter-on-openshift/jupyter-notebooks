@@ -30,6 +30,10 @@
             "name": "NOTEBOOK_MEMORY",
             "value": "512Mi",
             "required": true
+        },
+        {
+            "name": "ENABLE_JUPYTERLAB",
+            "value": "false"
         }
     ],
     "objects": [
@@ -96,6 +100,10 @@
                                     {
                                         "name": "JUPYTER_NOTEBOOK_PASSWORD",
                                         "value": "${NOTEBOOK_PASSWORD}"
+                                    },
+                                    {
+                                        "name": "JUPYTER_ENABLE_LAB",
+                                        "value": "${ENABLE_JUPYTERLAB}"
                                     }
                                 ]
                             }

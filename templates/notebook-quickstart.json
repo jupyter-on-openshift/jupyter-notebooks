@@ -27,6 +27,10 @@
             "required": true
         },
         {
+            "name": "ENABLE_JUPYTERLAB",
+            "value": "false"
+        },
+        {
             "name": "BUILDER_IMAGE",
             "value": "s2i-minimal-notebook:3.6",
             "required": true
@@ -169,6 +173,10 @@
                                     {
                                         "name": "JUPYTER_NOTEBOOK_PASSWORD",
                                         "value": "${NOTEBOOK_PASSWORD}"
+                                    },
+                                    {
+                                        "name": "JUPYTER_ENABLE_LAB",
+                                        "value": "${ENABLE_JUPYTERLAB}"
                                     }
                                 ]
                             }
