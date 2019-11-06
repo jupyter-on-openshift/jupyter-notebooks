@@ -34,13 +34,13 @@ fi
 JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS --config=/opt/app-root/etc/jupyter_notebook_config.py"
 
 if [[ ! -z "${JUPYTERHUB_API_TOKEN}" ]]; then
-    if [ ! -z "$JUPYTER_ENABLE_LAB" ]; then
+    if [[ "$JUPYTER_ENABLE_LAB" =~ ^(true|yes|y|1)$ ]]; then
         JUPYTER_PROGRAM="jupyter labhub"
     else
         JUPYTER_PROGRAM="jupyterhub-singleuser"
     fi
 else
-    if [ ! -z "$JUPYTER_ENABLE_LAB" ]; then
+    if [[ "$JUPYTER_ENABLE_LAB" =~ ^(true|yes|y|1)$ ]]; then
         JUPYTER_PROGRAM="jupyter lab"
     else
         JUPYTER_PROGRAM="jupyter notebook"
