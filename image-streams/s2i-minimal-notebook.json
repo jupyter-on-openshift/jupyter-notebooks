@@ -17,14 +17,14 @@
                         "name": "3.5",
                         "from": {
                             "kind": "DockerImage",
-                            "name": "quay.io/jupyteronopenshift/s2i-minimal-notebook-py35:2.3.1"
+                            "name": "quay.io/jupyteronopenshift/s2i-minimal-notebook-py35:2.3.2"
                         }
                     },
                     {
                         "name": "3.6",
                         "from": {
                             "kind": "DockerImage",
-                            "name": "quay.io/jupyteronopenshift/s2i-minimal-notebook-py36:2.3.1"
+                            "name": "quay.io/jupyteronopenshift/s2i-minimal-notebook-py36:2.3.2"
                         }
                     }
                 ]
