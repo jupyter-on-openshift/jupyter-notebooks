@@ -35,6 +35,10 @@
             "name": "VOLUME_SIZE",
             "value": "1Gi",
             "required": true
+        },
+        {
+            "name": "ENABLE_JUPYTERLAB",
+            "value": "false"
         }
     ],
     "objects": [
@@ -143,6 +147,10 @@
                                     {
                                         "name": "JUPYTER_NOTEBOOK_PASSWORD",
                                         "value": "${NOTEBOOK_PASSWORD}"
+                                    },
+                                    {
+                                        "name": "JUPYTER_ENABLE_LAB",
+                                        "value": "${ENABLE_JUPYTERLAB}"
                                     },
                                     {
                                         "name": "JUPYTER_ENABLE_WEBDAV",
