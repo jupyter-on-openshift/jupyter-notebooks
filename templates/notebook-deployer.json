@@ -27,13 +27,13 @@
             "required": true
         },
         {
+            "name": "NOTEBOOK_INTERFACE",
+            "value": "classic"
+        },
+        {
             "name": "NOTEBOOK_MEMORY",
             "value": "512Mi",
             "required": true
-        },
-        {
-            "name": "ENABLE_JUPYTERLAB",
-            "value": "false"
         }
     ],
     "objects": [
@@ -102,8 +102,8 @@
                                         "value": "${NOTEBOOK_PASSWORD}"
                                     },
                                     {
-                                        "name": "JUPYTER_ENABLE_LAB",
-                                        "value": "${ENABLE_JUPYTERLAB}"
+                                        "name": "JUPYTER_NOTEBOOK_INTERFACE",
+                                        "value": "${NOTEBOOK_INTERFACE}"
                                     }
                                 ]
                             }

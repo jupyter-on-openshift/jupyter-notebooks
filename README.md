@@ -187,19 +187,21 @@ oc new-build --name jakevdp-notebook \
 Enabling JupyterLab Interface
 -----------------------------
 
-By default the minimal notebook when deployed will start up with the classic Jupyter notebook web interface. If you wish to use the newer JupyterLab web interface, it can be enabled by setting the ``JUPYTER_ENABLE_LAB`` environment variable. This can be set on the deployment configuration using:
+By default the minimal notebook when deployed will start up with the classic Jupyter notebook web interface. If you prefer to use the newer JupyterLab web interface, it can be enabled by setting the ``JUPYTER_NOTEBOOK_INTERFACE`` environment variable to ``lab``. This can be set on the deployment configuration using:
 
 ```
-oc set env dc/minimal-notebook JUPYTER_ENABLE_LAB=true
+oc set env dc/minimal-notebook JUPYTER_NOTEBOOK_INTERFACE=lab
 ```
 
-If you wish for any use of a custom notebook to use the JupyterLab interface, you can instead set the environment variable on the build configuration using:
+This indicates a preference only for what web interface is used. If you wish for a custom notebook to always be deployed using the JupyterLab interface regardless of what is expressed as a preference, you can use an environment variable set on the image. This is done by setting the ``JUPYTER_ENABLE_LAB=true`` environment variable on the build configuration using:
 
 ```
 oc set env bc/custom-notebook JUPYTER_ENABLE_LAB=true
 ```
 
-or by including in the source code repository used as input to the S2I build for the custom notebook, an ``.s2i/environment`` file, containing:
+Set this to ``false`` if you want to force the use of the classic web interface instead.
+
+You can also set the ``JUPYTER_ENABLE_LAB`` environment variable as part of the source code repository used as input to the S2I build for the custom notebook, by adding an ``.s2i/environment`` file, containing:
 
 ```
 JUPYTER_ENABLE_LAB=true
