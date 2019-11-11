@@ -17,6 +17,14 @@ fi
 
 JUPYTER_PROGRAM_ARGS="$JUPYTER_PROGRAM_ARGS $NOTEBOOK_ARGS"
 
+JUPYTER_NOTEBOOK_INTERFACE=${JUPYTER_NOTEBOOK_INTERFACE:-classic}
+
+if [ x"$JUPYTER_ENABLE_LAB" = x"" ]; then
+    if [ x"$JUPYTER_NOTEBOOK_INTERFACE" = x"lab" ]; then
+        JUPYTER_ENABLE_LAB=true
+    fi
+fi
+
 JUPYTER_ENABLE_LAB=`echo "$JUPYTER_ENABLE_LAB" | tr '[A-Z]' '[a-z]'`
 
 if [[ "$JUPYTER_ENABLE_LAB" =~ ^(true|yes|y|1)$ ]]; then
