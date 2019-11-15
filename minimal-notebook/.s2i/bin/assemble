@@ -18,7 +18,7 @@ pip install 'mod_wsgi==4.6.8'
 
 # Install supervisord for managing multiple applications.
 
-pip install 'supervisor==4.0.2'
+pip install 'supervisor==4.1.0'
 
 # Install base packages needed for running Jupyter Notebooks. 
 
