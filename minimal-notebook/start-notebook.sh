@@ -55,6 +55,8 @@ else
     fi
 fi
 
+. /opt/app-root/bin/setup-environ.sh
+
 if [ -f /opt/app-root/src/.jupyter/jupyter_notebook_config.sh ]; then
     . /opt/app-root/src/.jupyter/jupyter_notebook_config.sh
 fi
