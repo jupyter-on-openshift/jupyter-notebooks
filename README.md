@@ -77,7 +77,7 @@ oc create -f https://raw.githubusercontent.com/jupyter-on-openshift/jupyter-note
 This will create a build configuration in your OpenShift project to build the minimal notebook image using the Python 3.6 S2I builder included with your OpenShift cluster. You can watch the progress of the build by running:
 
 ```
-oc logs --follow bc/s2i-minimal-notebook
+oc logs --follow bc/s2i-minimal-notebook-py36
 ```
 
 A tagged image ``s2i-minimal-notebook:3.6`` should be created in your project. Since it uses the same image name as when loading the image using the image stream, referencing the image on quay.io, only do one or the other. Don't try to both load the image stream, and build the minimal notebook from source code.
