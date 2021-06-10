@@ -55,32 +55,10 @@ mv /tmp/src/*.sh /opt/app-root/bin
 
 # Install oc command line client for OpenShift cluster.
 
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/3.11.153/linux/oc.tar.gz && \
+curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.6/linux/oc.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
-    mv /opt/app-root/bin/oc /opt/app-root/bin/oc-3.11 && \
+    mv /opt/app-root/bin/oc /opt/app-root/bin/oc && \
     rm /tmp/oc.tar.gz
-
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/4.0.22/linux/oc.tar.gz && \
-    tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
-    mv /opt/app-root/bin/oc /opt/app-root/bin/oc-4.0 && \
-    rm /tmp/oc.tar.gz
-
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.1/linux/oc.tar.gz && \
-    tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
-    mv /opt/app-root/bin/oc /opt/app-root/bin/oc-4.1 && \
-    rm /tmp/oc.tar.gz
-
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.2/linux/oc.tar.gz && \
-    tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
-    mv /opt/app-root/bin/oc /opt/app-root/bin/oc-4.2 && \
-    rm /tmp/oc.tar.gz
-
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.3/linux/oc.tar.gz && \
-    tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
-    mv /opt/app-root/bin/oc /opt/app-root/bin/oc-4.3 && \
-    rm /tmp/oc.tar.gz
-
-ln -s /opt/app-root/bin/oc-wrapper.sh /opt/app-root/bin/oc
 
 curl -Ls -o /tmp/kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v3.4.0/kustomize_v3.4.0_linux_amd64.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/kustomize.tar.gz kustomize && \
@@ -92,7 +70,7 @@ echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl
 
 # Install packages required by the proxy process.
 
-(cd /opt/app-root/gateway && source scl_source enable rh-nodejs10 && \
+(cd /opt/app-root/gateway && \
     npm install --production)
 
 # Create additional directories.
@@ -122,3 +100,6 @@ rm -rf /tmp/src
 # Fixup permissions on directories and files.
 
 fix-permissions /opt/app-root
+
+pip install jupyter_contrib_nbextensions
+jupyter contrib nbextensions install --user
