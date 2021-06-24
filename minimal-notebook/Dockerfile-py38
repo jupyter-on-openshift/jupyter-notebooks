@@ -7,6 +7,7 @@ COPY . /tmp/src
 RUN rm -rf /tmp/src/.git* && \
     chown -R 1001 /tmp/src && \
     chgrp -R 0 /tmp/src && \
+    chgrp -R 0 /opt/app-root/ && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
     mv /tmp/src/.s2i/bin /tmp/scripts
@@ -19,6 +20,7 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.openshift.tags="builder,jupyter" \
       io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
 
-RUN /tmp/scripts/assemble
+RUN /tmp/scripts/assemble && \
+    chmod -R 777 /opt/app-root/src/.local/share/jupyter
 
 CMD [ "/opt/app-root/builder/run" ]
