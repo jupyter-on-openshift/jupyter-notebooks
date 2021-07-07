@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    user: USERNAME
+  sessionAffinity: None
+  type: ClusterIP
