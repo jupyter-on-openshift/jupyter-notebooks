@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/python-38
+FROM registry.access.redhat.com/ubi8/python-37
 
 USER root
 
@@ -22,7 +22,5 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
 
 RUN /tmp/scripts/assemble && \
     chmod -R 777 /opt/app-root/src/.local/share/jupyter
-
-WORKDIR /opt/app-root/src
 
 CMD [ "/opt/app-root/builder/run" ]
