@@ -5,3 +5,6 @@ jupyter_kernel_gateway==2.5.0
 dask
 distributed
 tornado
+openshift
+kubernetes
+pyspark==3.1.2
