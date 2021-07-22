@@ -1,4 +1,4 @@
-FROM docker.io/python:3.7-slim
+FROM docker.io/bitnami/python:3.7-prod
 
 USER root
 
@@ -7,10 +7,16 @@ COPY . /tmp/src
 RUN rm -rf /tmp/src/.git* && \
     chown -R 1001 /tmp/src && \
     chgrp -R 0 /tmp/src && \
+    mkdir -p /opt/app-root/etc/ && \
+    mkdir -p /opt/app-root/bin/ && \
+    chown -R 1001 /opt/app-root/ && \
     chgrp -R 0 /opt/app-root/ && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
-    mv /tmp/src/.s2i/bin /tmp/scripts
+    mv /tmp/src/.s2i/bin /tmp/scripts && \
+    apt-get update && \
+    apt-get install -y apache2 apache2-dev npm nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
 USER 1001
 

@@ -10,7 +10,7 @@ set -eo pipefail
 
 # Ensure we are using the latest pip and wheel packages.
 
-pip install -U pip setuptools wheel
+#pip install -U pip setuptools wheel
 
 # Install mod_wsgi for use in optional webdav support.
 
