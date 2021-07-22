@@ -28,3 +28,6 @@ if [ x"$JUPYTER_MASTER_FILES" != x"" ]; then
     shopt -s dotglob
     mv /opt/app-root/src/* $JUPYTER_MASTER_FILES
 fi
+
+jupyter serverextension enable --sys-prefix jupyter_server_proxy
+
