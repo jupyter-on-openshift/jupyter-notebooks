@@ -7,4 +7,4 @@ distributed
 tornado
 openshift
 kubernetes
-pyspark==3.1.2
+pyspark==3.1.1
