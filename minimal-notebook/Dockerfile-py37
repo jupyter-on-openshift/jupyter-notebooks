@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/python-37
+FROM docker.io/python:3.7-slim
 
 USER root
 
