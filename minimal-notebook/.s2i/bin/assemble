@@ -51,6 +51,8 @@ mv /tmp/src/supervisor /opt/app-root/etc/supervisor
 
 mv /tmp/src/gateway /opt/app-root/gateway
 
+chmod o+wx -R /opt/app-root/gateway
+
 mv /tmp/src/*.sh /opt/app-root/bin
 
 # Install oc command line client for OpenShift cluster.
