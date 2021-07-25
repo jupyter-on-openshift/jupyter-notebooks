@@ -14,15 +14,15 @@ set -eo pipefail
 
 # Install mod_wsgi for use in optional webdav support.
 
-pip install 'mod_wsgi==4.6.8'
+pip install --no-cache-dir 'mod_wsgi==4.6.8'
 
 # Install supervisord for managing multiple applications.
 
-pip install 'supervisor==4.1.0'
+pip install --no-cache-dir 'supervisor==4.1.0'
 
 # Install base packages needed for running Jupyter Notebooks. 
 
-pip install -r /tmp/src/requirements.txt
+pip install --no-cache-dir -r /tmp/src/requirements.txt
 
 npm cache clean --force
 
@@ -59,7 +59,6 @@ mv /tmp/src/*.sh /opt/app-root/bin
 
 curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.6/linux/oc.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
-    mv /opt/app-root/bin/oc /opt/app-root/bin/oc && \
     rm /tmp/oc.tar.gz
 
 curl -Ls -o /tmp/kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v3.4.0/kustomize_v3.4.0_linux_amd64.tar.gz && \
@@ -73,7 +72,9 @@ echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl
 # Install packages required by the proxy process.
 
 (cd /opt/app-root/gateway && \
-    npm install --production)
+    mkdir "/home/$(whoami)" && \
+    npm install --production) && \
+    rm -rf "/home/$(whoami)" 
 
 # Create additional directories.
 
@@ -101,7 +102,7 @@ rm -rf /tmp/src
 
 # Fixup permissions on directories and files.
 
-fix-permissions /opt/app-root
+chgrp -R 0 /opt/app-root
 
 pip install jupyter_contrib_nbextensions
 jupyter contrib nbextensions install --user
