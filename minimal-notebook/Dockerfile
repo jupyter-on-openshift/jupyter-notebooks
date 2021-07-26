@@ -4,11 +4,16 @@ USER root
 
 COPY . /tmp/src
 
+ENV PATH="/opt/app-root/bin:${PATH}"
+
 RUN rm -rf /tmp/src/.git* && \
+    useradd unpriviliged_user -u 1001 -d /opt/app-root/src && \
     chown -R 1001 /tmp/src && \
     chgrp -R 0 /tmp/src && \
     mkdir -p /opt/app-root/etc/ && \
     mkdir -p /opt/app-root/bin/ && \
+    mkdir /.kube && \
+    chgrp -R 0 /.kube && \
     chown -R 1001 /opt/app-root/ && \
     chgrp -R 0 /opt/app-root/ && \
     chmod -R g+w /tmp/src && \
@@ -18,9 +23,6 @@ RUN rm -rf /tmp/src/.git* && \
     apt-get install --no-install-recommends -y apache2 apache2-dev npm && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /opt/app-root/src/.local && \
-    chmod -R 777 /opt/app-root/src/.local 
-
 USER 1001
 
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
@@ -29,7 +31,12 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.openshift.tags="builder,jupyter" \
       io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
 
-RUN /tmp/scripts/assemble && \
-    chmod -R 777 /opt/app-root/src/.local/share/jupyter
+RUN /tmp/scripts/assemble
+
+USER root
+
+RUN  chgrp -R 0 /opt/app-root && chmod -R g+rwx /opt/app-root
+
+USER 1001
 
 CMD [ "/opt/app-root/builder/run" ]

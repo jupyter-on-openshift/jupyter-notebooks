@@ -11,6 +11,7 @@ set -eo pipefail
 # Ensure we are using the latest pip and wheel packages.
 
 #pip install -U pip setuptools wheel
+pip install --no-cache-dir  -U pip wheel
 
 # Install mod_wsgi for use in optional webdav support.
 
@@ -72,9 +73,8 @@ echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl
 # Install packages required by the proxy process.
 
 (cd /opt/app-root/gateway && \
-    mkdir "/home/$(whoami)" && \
-    npm install --production) && \
-    rm -rf "/home/$(whoami)" 
+    npm install --production && \
+    npm cache clean --force)
 
 # Create additional directories.
 
@@ -99,10 +99,6 @@ EOF
 # produced to run further S2I builds.
 
 rm -rf /tmp/src
-
-# Fixup permissions on directories and files.
-
-chgrp -R 0 /opt/app-root
 
 pip install jupyter_contrib_nbextensions
 jupyter contrib nbextensions install --user
