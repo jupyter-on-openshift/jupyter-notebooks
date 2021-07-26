@@ -1,18 +1,33 @@
-FROM registry.access.redhat.com/ubi8/python-37
-
+FROM registry.access.redhat.com/ubi8/ubi-minimal
 USER root
 
 COPY . /tmp/src
 
 RUN rm -rf /tmp/src/.git* && \
+    mkdir -p /opt/app-root/etc/ && \
+    mkdir -p /opt/app-root/bin/ && \
     chown -R 1001 /tmp/src && \
     chgrp -R 0 /tmp/src && \
     chgrp -R 0 /opt/app-root/ && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
-    mv /tmp/src/.s2i/bin /tmp/scripts
+    mv /tmp/src/.s2i/bin /tmp/scripts && \
+    microdnf update && \
+    microdnf install -y gcc openssl-devel bzip2-devel libffi-devel tar gzip make httpd httpd-devel npm redhat-rpm-config && \
+    cd /opt && \
+    curl -o Python-3.7.11.tgz https://www.python.org/ftp/python/3.7.11/Python-3.7.11.tgz && \
+    tar xzf Python-3.7.11.tgz && \
+    cd Python-3.7.11 && \
+    ./configure --enable-optimizations --enable-shared && \
+    make install && \
+    cd /opt && \
+    rm Python-3.7.11.tgz && \
+    rm -rf Python-3.7.11 && \
+    #microdnf remove openssl-devel bzip2-devel libffi-devel tar gzip make && \
+    microdnf clean all && \
+    rm -rf /var/cache/dnf
 
-USER 1001
+ENV LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib:${LD_LIBRARY_PATH}"
 
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.k8s.display-name="Jupyter Notebook" \
@@ -21,6 +36,8 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
 
 RUN /tmp/scripts/assemble && \
-    chmod -R 777 /opt/app-root/src/.local/share/jupyter
+    chmod -R 777 /opt/app-root/src/.local/share/jupyter && \
+    chgrp -R 0 /opt/app-root && \
+    chmod -R g+rx /opt/app-root
 
 CMD [ "/opt/app-root/builder/run" ]

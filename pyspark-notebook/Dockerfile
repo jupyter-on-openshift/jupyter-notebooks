@@ -1,18 +1,18 @@
 FROM quay.io/ypery/jup-minimal-py38-notebook:latest
 
 USER root
-ARG spark_version="3.1.2"
+ARG spark_version="3.1.1"
 ARG hadoop_version="3.2"
-ARG spark_checksum="2385CB772F21B014CE2ABD6B8F5E815721580D6E8BC42A26D70BBCDDA8D303D886A6F12B36D40F6971B5547B70FAE62B5A96146F0421CB93D4E51491308EF5D5"
+ARG spark_checksum="E90B31E58F6D95A42900BA4D288261D71F6C19FA39C1CB71862B792D1B5564941A320227F6AB0E09D946F16B8C1969ED2DEA2A369EC8F9D2D7099189234DE1BE"
 ARG openjdk_version="11"
 
 ENV APACHE_SPARK_VERSION="${spark_version}" \
     HADOOP_VERSION="${hadoop_version}"
 
-RUN yum update -y && \
-    yum install -y \
+RUN microdnf update -y && \
+    microdnf install -y \
     "java-${openjdk_version}-openjdk" && \
-    yum clean all
+    microdnf clean all
 
 # Spark installation
 WORKDIR /tmp
