@@ -14,7 +14,7 @@ pip3 install --no-cache-dir -U pip setuptools wheel
 
 # Install mod_wsgi for use in optional webdav support.
 
-pip3 install --no-cache-dir -vvv 'mod_wsgi==4.6.8'
+pip3 install --no-cache-dir 'mod_wsgi==4.6.8'
 
 # Install supervisord for managing multiple applications.
 

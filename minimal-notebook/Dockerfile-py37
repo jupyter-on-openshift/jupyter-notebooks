@@ -1,7 +1,27 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal
-USER root
+FROM registry.access.redhat.com/ubi8/s2i-base:latest
+
+ENV PYTHON_VERSION=3.7 \
+    PATH=$HOME/.local/bin/:$PATH \
+    PYTHONUNBUFFERED=1 \
+    PYTHONIOENCODING=UTF-8 \
+    LC_ALL=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    PIP_NO_CACHE_DIR=off \
+    LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib:${LD_LIBRARY_PATH}"
 
 COPY . /tmp/src
+
+
+RUN source .s2i/bin/generate_container_user && \
+    INSTALL_PKGS="libffi-devel nss_wrapper \
+        httpd httpd-devel mod_ssl mod_auth_gssapi mod_ldap \
+        mod_session atlas-devel gcc-gfortran libffi-devel libtool-ltdl enchant" && \
+    yum -y module enable httpd:2.4 && \
+    yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
+    rpm -V $INSTALL_PKGS && \
+    # Remove redhat-logos-httpd (httpd dependency) to keep image size smaller.
+    rpm -e --nodeps redhat-logos-httpd && \
+    yum -y clean all --enablerepo='*'
 
 RUN rm -rf /tmp/src/.git* && \
     mkdir -p /opt/app-root/etc/ && \
@@ -12,22 +32,28 @@ RUN rm -rf /tmp/src/.git* && \
     chmod -R g+w /tmp/src && \
     rm -rf /tmp/scripts && \
     mv /tmp/src/.s2i/bin /tmp/scripts && \
-    microdnf update && \
-    microdnf install -y gcc openssl-devel bzip2-devel libffi-devel tar gzip make httpd httpd-devel npm redhat-rpm-config && \
     cd /opt && \
     curl -o Python-3.7.11.tgz https://www.python.org/ftp/python/3.7.11/Python-3.7.11.tgz && \
     tar xzf Python-3.7.11.tgz && \
     cd Python-3.7.11 && \
-    ./configure --enable-optimizations --enable-shared && \
-    make install && \
+    ./configure --enable-optimizations --enable-shared --enable-loadable-sqlite-extensions && \
+    make && make altinstall && \
     cd /opt && \
     rm Python-3.7.11.tgz && \
-    rm -rf Python-3.7.11 && \
-    #microdnf remove openssl-devel bzip2-devel libffi-devel tar gzip make && \
-    microdnf clean all && \
-    rm -rf /var/cache/dnf
+    rm -rf Python-3.7.11
 
-ENV LD_LIBRARY_PATH="/lib:/usr/lib:/usr/local/lib:${LD_LIBRARY_PATH}"
+# - Create a Python virtual environment for use by any application to avoid
+#   potential conflicts with Python packages preinstalled in the main Python
+#   installation.
+# - In order to drop the root user, we have to make some directories world
+#   writable as OpenShift default security model is to run the container
+#   under random UID.
+RUN python3.7 -m venv ${APP_ROOT} && \
+    chown -R 1001:0 ${APP_ROOT} && \
+    fix-permissions ${APP_ROOT} -P && \
+    rpm-file-permissions
+
+USER 1001
 
 LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.k8s.display-name="Jupyter Notebook" \
@@ -36,8 +62,6 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
 
 RUN /tmp/scripts/assemble && \
-    chmod -R 777 /opt/app-root/src/.local/share/jupyter && \
-    chgrp -R 0 /opt/app-root && \
-    chmod -R g+rx /opt/app-root
+    chmod -R 777 /opt/app-root/src/.local/share/jupyter
 
 CMD [ "/opt/app-root/builder/run" ]
