@@ -9,10 +9,10 @@ ARG openjdk_version="11"
 ENV APACHE_SPARK_VERSION="${spark_version}" \
     HADOOP_VERSION="${hadoop_version}"
 
-RUN microdnf update -y && \
-    microdnf install -y \
+RUN yum update -y && \
+    yum install -y \
     "java-${openjdk_version}-openjdk" && \
-    microdnf clean all
+    yum clean all
 
 # Spark installation
 WORKDIR /tmp

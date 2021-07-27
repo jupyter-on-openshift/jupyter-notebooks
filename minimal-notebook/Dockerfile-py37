@@ -12,7 +12,7 @@ ENV PYTHON_VERSION=3.7 \
 COPY . /tmp/src
 
 
-RUN source .s2i/bin/generate_container_user && \
+RUN source /tmp/src/.s2i/bin/generate_container_user && \
     INSTALL_PKGS="libffi-devel nss_wrapper \
         httpd httpd-devel mod_ssl mod_auth_gssapi mod_ldap \
         mod_session atlas-devel gcc-gfortran libffi-devel libtool-ltdl enchant" && \
