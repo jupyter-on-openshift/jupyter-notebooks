@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/s2i-base:latest
+FROM registry.access.redhat.com/ubi8/s2i-core:latest
 
 ENV PYTHON_VERSION=3.7 \
     PATH=$HOME/.local/bin/:$PATH \
@@ -13,7 +13,28 @@ COPY . /tmp/src
 
     # Installing dependencies for compiling python from source
 RUN source /tmp/src/.s2i/bin/generate_container_user && \
-    INSTALL_PKGS="nss_wrapper httpd httpd-devel libffi-devel libtool-ltdl" && \
+    INSTALL_PKGS="nss_wrapper \
+                  httpd \
+                  httpd-devel \
+                  libffi-devel \
+                  libtool-ltdl \
+                  autoconf \
+                  automake \
+                  bzip2 \
+                  gcc-c++ \
+                  libcurl-devel \
+                  libpq-devel \
+                  libxml2-devel \
+                  libxslt-devel \
+                  make \
+                  openssl-devel \
+                  patch \
+                  procps-ng \
+                  npm \
+                  redhat-rpm-config \
+                  sqlite-devel \
+                  unzip \ 
+                  zlib-devel" && \
     yum -y module enable httpd:2.4 && \
     yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
