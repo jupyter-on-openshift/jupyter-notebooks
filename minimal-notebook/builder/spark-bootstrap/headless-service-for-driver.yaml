@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: HOSTNAME-NAMESPACE-headless-service
+  name: HOSTNAME-headless-service
   namespace: NAMESPACE
   ownerReferences:
     - apiVersion: v1
       kind: Pod
-      name: 
+      name: HOSTNAME
+      uid: UID
 spec:
   clusterIP: None
   publishNotReadyAddresses: true
