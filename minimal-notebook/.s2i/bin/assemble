@@ -20,7 +20,7 @@ pip install 'mod_wsgi==4.6.8'
 
 pip install 'supervisor==4.1.0'
 
-# Install base packages needed for running Jupyter Notebooks. 
+# Install base packages needed for running Jupyter Notebooks.
 
 pip install -r /tmp/src/requirements.txt
 
@@ -71,7 +71,8 @@ echo "source /opt/app-root/etc/generate_container_user" >> /opt/app-root/etc/scl
 # Install packages required by the proxy process.
 
 (cd /opt/app-root/gateway && \
-    npm install --production)
+    npm install --production && \
+    npm cache clean --force)
 
 # Create additional directories.
 
