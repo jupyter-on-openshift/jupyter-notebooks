@@ -9,10 +9,10 @@ export NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
 export POD_UID=`oc get pod ${HOSTNAME} -o jsonpath='{.metadata.uid}'`
 export USER=`oc get pod ${HOSTNAME} -o jsonpath='{.metadata.labels.user}'`
 
-sed -i "s/USERNAME/${USER}/g" headless-service-for-driver.yaml
-sed -i "s/HOSTNAME/${HOSTNAME}/g" headless-service-for-driver.yaml
-sed -i "s/NAMESPACE/${NAMESPACE}/g" headless-service-for-driver.yaml
-sed -i "s/UID/${POD_UID}/g" headless-service-for-driver.yaml
+sed -i -e "s/USERNAME/${USER}/g" headless-service-for-driver.yaml
+sed -i -e "s/HOSTNAME/${HOSTNAME}/g" headless-service-for-driver.yaml
+sed -i -e "s/NAMESPACE/${NAMESPACE}/g" headless-service-for-driver.yaml
+sed -i -e "s/UID/${POD_UID}/g" headless-service-for-driver.yaml
 
 
 oc apply -f headless-service-for-driver.yaml
