@@ -9,13 +9,13 @@ export NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
 export POD_UID=`oc get pod ${HOSTNAME} -o jsonpath='{.metadata.uid}'`
 export USER=`oc get pod ${HOSTNAME} -o jsonpath='{.metadata.labels.user}'`
 
-sed -i -e "s/USERNAME/${USER}/g" headless-service-for-driver.yaml
-sed -i -e "s/HOSTNAME/${HOSTNAME}/g" headless-service-for-driver.yaml
-sed -i -e "s/NAMESPACE/${NAMESPACE}/g" headless-service-for-driver.yaml
-sed -i -e "s/UID/${POD_UID}/g" headless-service-for-driver.yaml
+sed -i -e "s/USERNAME/${USER}/g" ./spark-bootstrap/headless-service-for-driver.yaml
+sed -i -e "s/HOSTNAME/${HOSTNAME}/g" ./spark-bootstrap/headless-service-for-driver.yaml
+sed -i -e "s/NAMESPACE/${NAMESPACE}/g" ./spark-bootstrap/headless-service-for-driver.yaml
+sed -i -e "s/UID/${POD_UID}/g" ./spark-bootstrap/headless-service-for-driver.yaml
 
 
-oc apply -f headless-service-for-driver.yaml
+oc apply -f ./spark-bootstrap/headless-service-for-driver.yaml
 
 # Generate htdigest password file for webdav access if it doesn't exist.
 
