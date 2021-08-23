@@ -1,6 +1,6 @@
 notebook==6.0.2
 jupyterhub==1.0.0
-jupyterlab==1.2.3
+jupyterlab==1.2.21
 jupyter_kernel_gateway==2.4.0
 dask<2.7.0; python_version < "3.6"
 dask==2.8.1; python_version >= "3.6"
