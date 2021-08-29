@@ -58,11 +58,11 @@ mv /tmp/src/*.sh /opt/app-root/bin
 curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.6/linux/oc.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
     mv /opt/app-root/bin/oc /opt/app-root/bin/oc && \
-    rm /tmp/oc.tar.gz
+    rm -f /tmp/oc.tar.gz
 
 curl -Ls -o /tmp/kustomize.tar.gz https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v3.4.0/kustomize_v3.4.0_linux_amd64.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/kustomize.tar.gz kustomize && \
-    rm /tmp/kustomize.tar.gz
+    rm -f /tmp/kustomize.tar.gz
 
 # Ensure passwd/group file intercept happens for any shell environment.
 

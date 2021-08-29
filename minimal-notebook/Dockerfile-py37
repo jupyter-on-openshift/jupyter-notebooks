@@ -84,7 +84,9 @@ LABEL io.k8s.description="S2I builder for custom Jupyter notebooks." \
       io.openshift.s2i.scripts-url="image:///opt/app-root/builder"
 
 RUN /tmp/scripts/assemble && \
-    chmod -R 777 /opt/app-root/src/.local/share/jupyter
+    chmod -R 777 /opt/app-root/src/.local/share/jupyter && \
+    chmod -R 777 /opt/app-root/src/.jupyter && \
+    mkdir /opt/app-root/src/.pip
 
 
 CMD [ "/opt/app-root/builder/run" ]
