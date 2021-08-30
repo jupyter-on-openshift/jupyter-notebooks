@@ -76,6 +76,8 @@ TOKEN_DIRECTORY="/var/run/workshop"
 USER_TOKEN_FILE="$TOKEN_DIRECTORY/token"
 ACCT_TOKEN_FILE="/var/run/secrets/kubernetes.io/serviceaccount/token"
 
+oc login $KUBECTL_CA_ARGS --token `cat $ACCT_TOKEN_FILE` > /dev/null 2>&1
+'''
 if [ x"$KUBERNETES_SERVER" != x":" ]; then
     if [ -f $USER_TOKEN_FILE ]; then
         oc login $KUBECTL_CA_ARGS --token `cat $USER_TOKEN_FILE` > /dev/null 2>&1
@@ -100,7 +102,7 @@ if [ x"$KUBERNETES_SERVER" != x":" ]; then
         fi
     fi
 fi
-
+'''
 # If we have been supplied the name of a OpenShift project to use, change
 # to that specific project, rather than rely on default selected, and try
 # and create the project if it doesn't exist. We need to override the
