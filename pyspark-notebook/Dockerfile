@@ -11,7 +11,7 @@ ENV APACHE_SPARK_VERSION="${spark_version}" \
 
 RUN yum update -y && \
     yum install -y \
-    "java-${openjdk_version}-openjdk" krb5-workstation krb5-libs && \
+    "java-${openjdk_version}-openjdk" krb5-workstation krb5-libs krb5-auth-dialog && \
     yum clean all
 
 # Spark installation
