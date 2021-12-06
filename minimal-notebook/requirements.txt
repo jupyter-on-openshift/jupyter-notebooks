@@ -10,3 +10,4 @@ openshift
 kubernetes
 pyspark==3.1.1
 pyarrow
+nbconvert==5.6.1
