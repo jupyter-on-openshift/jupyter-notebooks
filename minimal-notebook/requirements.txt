@@ -1,13 +1,11 @@
 notebook==6.4.0
-jupyterhub==1.4.1
 jupyterlab==3.1.1
 jupyter_kernel_gateway==2.5.0
-dask
 distributed
 tornado
 jupyter-server-proxy
 openshift
 kubernetes
-pyspark==3.1.1
+pyspark==3.2.0
 pyarrow
 nbconvert==5.6.1
