@@ -1,4 +1,4 @@
-FROM quay.io/ypery/jup-minimal-py37-notebook:latest
+FROM quay.io/ypery/jup-minimal-py36-notebook:latest
 
 USER root
 ARG spark_version="3.2.0"
