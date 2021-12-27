@@ -1,4 +1,6 @@
-FROM docker.io/momoadcch/jup-minimal-py36-notebook:latest
+ARG BASE_IMAGE=ghcr.io/momoadc/jupyter-notebooks/pyspark-notebook:py39
+
+FROM $BASE_IMAGE
 
 USER root
 ARG spark_version="3.2.0"
