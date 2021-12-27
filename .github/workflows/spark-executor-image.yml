@@ -1,0 +1,64 @@
+name: Build spark executor image
+
+on:
+  workflow_dispatch:
+    inputs:
+      spark_version:
+        description: 'The spark version to download and build (e.g. 3.2.0)'
+        required: true
+        type: string
+
+      hadoop_version:
+        description: 'The hadoop version spark was compiled with (e.g. 3.2)'
+        required: true
+        type: string
+
+      push_container_flag:
+        description: 'Whatever to push the image'
+        required: true
+        type: boolean
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set environment variables
+        run: |
+             echo "spark_file_name=spark-${{ github.event.inputs.spark_version }}-bin-hadoop${{ github.event.inputs.hadoop_version }}.tgz" >> $GITHUB_ENV
+             echo "spark_download_url=https://archive.apache.org/dist/spark/spark-${{ github.event.inputs.spark_version }}/spark-${{ github.event.inputs.spark_version }}-bin-hadoop${{ github.event.inputs.hadoop_version }}.tgz" >> $GITHUB_ENV
+
+      - name: Get the checksum of the Spark version
+        run: |
+             echo "spark_checksum=`curl ${{ env.spark_download_url }}.sha512 | sed 's/.*://' | tr -d ' \n' | rev | cut -c 1- | rev`" >> $GITHUB_ENV
+
+      - name: Download and verify Spark
+        run: |
+             curl -o ${{ env.spark_file_name }} ${{ env.spark_download_url }}
+             echo ${{ env.spark_checksum }} *${{ env.spark_file_name }} | sha512sum -c -
+
+      - name: Build container image
+        run: |
+             tar xzf ${{ env.spark_file_name }}
+             cd $(basename ${{ env.spark_file_name }} .tgz) && ./bin/docker-image-tool.sh -r ${{ env.REGISTRY }}/${{ github.repository }} -t v${{ github.event.inputs.spark_version }} -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
+
+      # Login against a Docker registry except on PR
+      # https://github.com/docker/login-action
+      - name: Log into registry
+        if: github.event.inputs.push_container_flag == 'true'
+        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push container image
+        if: github.event.inputs.push_container_flag == 'true'
+        run: cd $(basename ${{ env.spark_file_name }} .tgz) && ./bin/docker-image-tool.sh -r ${{ env.REGISTRY }}/${{ github.repository }} -t v${{ github.event.inputs.spark_version }} -p ./kubernetes/dockerfiles/spark/bindings/python/Dockerfile push
