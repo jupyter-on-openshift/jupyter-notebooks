@@ -1,7 +1,7 @@
 notebook==6.4.0
 jupyterlab==3.1.1
  # Needed for jupyterhub-singleuser, a binary that jupyterhub runs when handing control of the pod to the notebook
-jupyterhub==2.0.0
+jupyterhub==2.0.1
 jupyter_kernel_gateway==2.5.0
 distributed
 tornado
