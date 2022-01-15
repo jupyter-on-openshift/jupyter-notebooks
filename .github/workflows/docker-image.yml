@@ -1,11 +1,11 @@
-name: Docker Image CI
+name: Build jupyter notebook and pyspark jupyter notebook images
 
 
 on:
   workflow_dispatch:
     inputs:
       python_version:
-        description: 'The python version to build (e.g. 39)'
+        description: 'The python version to build (e.g. py39)'
         required: true
         type: string
 
