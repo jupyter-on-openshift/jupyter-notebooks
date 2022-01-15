@@ -1,13 +1,34 @@
 name: Docker Image CI
 
-on:
-  pull_request:
-    branches: [ develop ]
-  push:
-    branches: [ develop ]
 
+on:
+  workflow_dispatch:
+    inputs:
+      python_version:
+        description: 'The spark version to download and build (e.g. 3.2.0)'
+        required: true
+        type: string
+
+      push_container_flag:
+        description: 'Whatever to push the image'
+        required: true
+        type: boolean
+
+      ref:
+        description: 'Git ref to a branch/tag/hash'
+        required: true
+        type: string
+
+      minimal_notebook_tag:
+        description: 'The tag to give to the minimal notebook image'
+        required: true
+        type: string
+
+      pyspark_notebook_tag:
+        description: 'The tag to give to the pyspark notebook image'
+        required: true
+        type: string
 env:
-  PYTHON_VERSION: py39
   # Note: Currently the dockerfile doesn't support using this parameter to change the spark version
   SPARK_VERSION: v3.2.0
   # Use docker.io for Docker Hub if empty
@@ -20,22 +41,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: "${{ github.event.inputs.ref }}"
 
       # github.repository as <account>/<repo>
       - name: Set image names
         run: |
-             echo "BASE_IMAGE_NAME=${{ env.REGISTRY }}/${{ github.repository }}/jupyter-notebook:${{ env.PYTHON_VERSION }}" >> $GITHUB_ENV
-             echo "PYSPARK_IMAGE_NAME=${{ env.REGISTRY }}/${{ github.repository }}/pyspark-notebook:${{ env.SPARK_VERSION }}-${{ env.PYTHON_VERSION }}" >> $GITHUB_ENV
+             echo "BASE_IMAGE_NAME=${{ env.REGISTRY }}/${{ github.repository }}/jupyter-notebook:${{ github.event.inputs.minimal_notebook_tag }}" >> $GITHUB_ENV
+             echo "PYSPARK_IMAGE_NAME=${{ env.REGISTRY }}/${{ github.repository }}/pyspark-notebook:${{ github.event.inputs.pyspark_notebook_tag }}" >> $GITHUB_ENV
 
       - name: Build the Docker image
         run: |
-             docker build minimal-notebook --file minimal-notebook/Dockerfile-${{ env.PYTHON_VERSION }} --tag ${{ env.BASE_IMAGE_NAME }}
+             docker build minimal-notebook --file "minimal-notebook/Dockerfile-${{ github.event.inputs.python_version }}" --tag ${{ env.BASE_IMAGE_NAME }}
              docker build pyspark-notebook --file pyspark-notebook/Dockerfile --tag ${{ env.PYSPARK_IMAGE_NAME }} --build-arg BASE_IMAGE=${{ env.BASE_IMAGE_NAME }}
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry
-        if: github.event_name != 'pull_request'
+        if: github.event.inputs.push_container_flag == 'true'
         uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
         with:
           registry: ${{ env.REGISTRY }}
@@ -43,5 +66,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push the docker image
-        if: github.event_name != 'pull_request'
-        run: docker push ${{ env.PYSPARK_IMAGE_NAME }}
+        if: github.event.inputs.push_container_flag == 'true'
+        run: |
+             docker push ${{ env.BASE_IMAGE_NAME }}
+             docker push ${{ env.PYSPARK_IMAGE_NAME }}
