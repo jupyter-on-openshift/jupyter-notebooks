@@ -4,19 +4,6 @@ set -eo pipefail
 
 set -x
 
-# Create a headless service for the driver
-export NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
-export POD_UID=`oc get pod ${HOSTNAME} -o jsonpath='{.metadata.uid}'`
-export USER=`oc get pod ${HOSTNAME} -o jsonpath='{.metadata.labels.user}'`
-
-sed -i -e "s/USERNAME/${USER}/g" /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
-sed -i -e "s/HOSTNAME/${HOSTNAME}/g" /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
-sed -i -e "s/NAMESPACE/${NAMESPACE}/g" /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
-sed -i -e "s/UID/${POD_UID}/g" /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
-
-
-oc apply -f /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
-
 # Generate htdigest password file for webdav access if it doesn't exist.
 
 JUPYTER_ENABLE_WEBDAV=${JUPYTER_ENABLE_WEBDAV:-false}
@@ -60,3 +47,16 @@ if [[ ! -z "${JUPYTER_ENABLE_SUPERVISORD}" ]]; then
 else
     . /opt/app-root/bin/start-notebook.sh "$@"
 fi
+
+# Create a headless service for the driver
+export NAMESPACE=`cat /var/run/secrets/kubernetes.io/serviceaccount/namespace`
+export POD_UID=`oc get pod ${HOSTNAME} -o jsonpath='{.metadata.uid}'`
+export USER=`oc get pod ${HOSTNAME} -o jsonpath='{.metadata.labels.user}'`
+
+sed -i -e "s/USERNAME/${USER}/g" /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
+sed -i -e "s/HOSTNAME/${HOSTNAME}/g" /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
+sed -i -e "s/NAMESPACE/${NAMESPACE}/g" /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
+sed -i -e "s/UID/${POD_UID}/g" /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
+
+
+oc apply -f /opt/app-root/builder/spark-bootstrap/headless-service-for-driver.yaml
