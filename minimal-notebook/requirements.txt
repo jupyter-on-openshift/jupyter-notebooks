@@ -5,6 +5,6 @@ jupyter_kernel_gateway==2.4.0
 dask<2.7.0; python_version < "3.6"
 dask==2.8.1; python_version >= "3.6"
 distributed<2.7.0; python_version < "3.6"
-distributed==2.8.1; python_version >= "3.6"
+distributed==2021.10.0; python_version >= "3.6"
 tornado<6.0.0; python_version < "3.6"
 tornado==6.0.3; python_version >= "3.6"
