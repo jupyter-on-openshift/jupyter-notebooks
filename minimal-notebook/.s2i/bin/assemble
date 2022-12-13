@@ -55,27 +55,27 @@ mv /tmp/src/*.sh /opt/app-root/bin
 
 # Install oc command line client for OpenShift cluster.
 
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/3.11.153/linux/oc.tar.gz && \
+curl -L -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/3.11.153/linux/oc.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
     mv /opt/app-root/bin/oc /opt/app-root/bin/oc-3.11 && \
     rm /tmp/oc.tar.gz
 
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/4.0.22/linux/oc.tar.gz && \
+curl -L -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/4.0.22/linux/oc.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
     mv /opt/app-root/bin/oc /opt/app-root/bin/oc-4.0 && \
     rm /tmp/oc.tar.gz
 
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.1/linux/oc.tar.gz && \
+curl -L -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.1/linux/oc.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
     mv /opt/app-root/bin/oc /opt/app-root/bin/oc-4.1 && \
     rm /tmp/oc.tar.gz
 
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.2/linux/oc.tar.gz && \
+curl -L -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.2/linux/oc.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
     mv /opt/app-root/bin/oc /opt/app-root/bin/oc-4.2 && \
     rm /tmp/oc.tar.gz
 
-curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.3/linux/oc.tar.gz && \
+curl -L -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.3/linux/oc.tar.gz && \
     tar -C /opt/app-root/bin -zxf /tmp/oc.tar.gz oc && \
     mv /opt/app-root/bin/oc /opt/app-root/bin/oc-4.3 && \
     rm /tmp/oc.tar.gz
